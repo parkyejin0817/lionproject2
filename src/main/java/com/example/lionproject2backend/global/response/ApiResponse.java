@@ -1,6 +1,6 @@
 package com.example.lionproject2backend.global.response;
 
-import com.example.backend.global.exception.custom.ErrorCode;
+import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,9 +1,9 @@
 package com.example.lionproject2backend.global.exception;
 
 
-import com.example.backend.global.exception.custom.CustomException;
-import com.example.backend.global.exception.custom.ErrorCode;
-import com.example.backend.global.response.ApiResponse;
+import com.example.lionproject2backend.global.exception.custom.CustomException;
+import com.example.lionproject2backend.global.exception.custom.ErrorCode;
+import com.example.lionproject2backend.global.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
