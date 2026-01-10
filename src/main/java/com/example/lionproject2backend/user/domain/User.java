@@ -36,5 +36,15 @@ public class User extends BaseEntity{
 
     @Column(columnDefinition = "TEXT")
     private String introduction;
+
+    public static User create(String email, String encodedPassword, String nickname, UserRole role) {
+        User user = new User();
+        user.email = email;
+        user.password = encodedPassword;
+        user.nickname = nickname;
+        user.userRole = role;
+        user.introduction = null;
+        return user;
+    }
 }
 

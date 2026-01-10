@@ -11,6 +11,10 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -77,5 +81,13 @@ public class JwtUtil {
 
     public String getRole(String token) {
         return parseClaims(token).get("role", String.class);
+    }
+    public Authentication getAuthentication(String token) {
+        Long userId = getUserId(token);
+        String role = "ROLE_" + getRole(token);
+
+        var authorities = List.of(new SimpleGrantedAuthority(role));
+
+        return new UsernamePasswordAuthenticationToken(userId, null, authorities);
     }
 }
