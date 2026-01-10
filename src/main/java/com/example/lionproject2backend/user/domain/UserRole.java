@@ -1,7 +1,7 @@
 package com.example.lionproject2backend.user.domain;
 
 public enum UserRole {
-    MENTOR, //ROLE_MEMTOR?
+    MENTOR,
     MENTEE,
     ADMIN
 }

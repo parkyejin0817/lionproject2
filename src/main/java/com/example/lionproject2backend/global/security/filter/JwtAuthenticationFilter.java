@@ -1,10 +1,10 @@
 package com.example.lionproject2backend.global.security.filter;
 
-import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
-import com.example.lionproject2backend.global.security.jwt.JwtAuthenticationToken;
+import com.example.lionproject2backend.global.response.ApiResponse;
 import com.example.lionproject2backend.global.security.jwt.JwtUtil;
 import com.example.lionproject2backend.global.security.jwt.TokenType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -12,17 +12,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Component
+@RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -44,15 +46,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             } catch (ExpiredJwtException e) {
                 SecurityContextHolder.clearContext();
-                throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+                writeError(response, ErrorCode.TOKEN_EXPIRED);
+                return;
 
             } catch (JwtException e) {
                 SecurityContextHolder.clearContext();
-                throw new CustomException(ErrorCode.TOKEN_INVALID);
+                writeError(response, ErrorCode.TOKEN_INVALID);
+                return;
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void writeError(HttpServletResponse response, ErrorCode errorCode)
+            throws IOException {
+
+        response.setStatus(errorCode.getStatus().value());
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+
+        new ObjectMapper().writeValue(
+                response.getWriter(),
+                ApiResponse.fail(errorCode)
+        );
     }
 
 }

@@ -34,3 +34,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         om.writeValue(response.getWriter(), ApiResponse.fail(errorCode));
     }
 }
+
