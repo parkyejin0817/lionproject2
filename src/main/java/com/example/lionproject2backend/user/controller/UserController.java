@@ -1,9 +1,9 @@
 package com.example.lionproject2backend.user.controller;
 
-import com.example.lionproject2backend.dto.user.UserGetResponse;
-import com.example.lionproject2backend.dto.user.UserUpdateRequest;
-import com.example.lionproject2backend.dto.user.UserUpdateResponse;
 import com.example.lionproject2backend.global.response.ApiResponse;
+import com.example.lionproject2backend.user.dto.UserGetResponse;
+import com.example.lionproject2backend.user.dto.UserUpdateRequest;
+import com.example.lionproject2backend.user.dto.UserUpdateResponse;
 import com.example.lionproject2backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

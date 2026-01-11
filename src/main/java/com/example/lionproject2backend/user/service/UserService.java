@@ -1,9 +1,9 @@
 package com.example.lionproject2backend.user.service;
 
-import com.example.lionproject2backend.dto.user.UserGetResponse;
-import com.example.lionproject2backend.dto.user.UserUpdateRequest;
-import com.example.lionproject2backend.dto.user.UserUpdateResponse;
 import com.example.lionproject2backend.user.domain.User;
+import com.example.lionproject2backend.user.dto.UserGetResponse;
+import com.example.lionproject2backend.user.dto.UserUpdateRequest;
+import com.example.lionproject2backend.user.dto.UserUpdateResponse;
 import com.example.lionproject2backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

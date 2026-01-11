@@ -28,5 +28,9 @@ public class Skill extends BaseEntity{
     @Column(name = "skill_name", unique = true, length = 50)
     private String skillName;
 
+    public Skill(String skillName) {
+        this.skillName = skillName;
+    }
+
 }
 

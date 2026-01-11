@@ -1,0 +1,32 @@
+### 1. POST - 멘토 신청
+POST http://localhost:8080/api/mentors/apply
+Content-Type: application/json
+
+{
+  "career": "5년차 백엔드 개발자",
+  "skills": ["Java", "Spring", "MySQL"]
+}
+
+### 2. 멘토 목록 조회
+GET http://localhost:8080/api/mentors
+
+### 3. 멘토 상세 조회
+GET http://localhost:8080/api/mentors/1
+
+### 4. 중복 신청 테스트
+POST http://localhost:8080/api/mentors/apply
+Content-Type: application/json
+
+{
+  "career": "중복 신청",
+  "skills": ["Java"]
+}
+
+### User 정보 수정
+PUT http://localhost:8080/api/user/me
+Content-Type: application/json
+
+{
+  "nickname": "멘토",
+  "introduction": "이제 멘토입니다"
+}

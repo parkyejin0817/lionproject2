@@ -39,5 +39,12 @@ public class Mentor extends BaseEntity {
 
     @Column(name = "review_count")
     private int reviewCount = 0;
+
+    public Mentor(User user, String career) {
+        this.user = user;
+        this.career = career;
+        this.mentorStatus = MentorStatus.APPROVED;
+        this.reviewCount = 0;
+    }
 }
 
