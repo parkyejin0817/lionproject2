@@ -2,11 +2,15 @@ package com.example.lionproject2backend.global.config;
 
 import com.example.lionproject2backend.auth.cookie.CookieProperties;
 import com.example.lionproject2backend.global.security.filter.JwtAuthenticationFilter;
+import com.example.lionproject2backend.global.security.filter.LocalBypassFilter;
 import com.example.lionproject2backend.global.security.handler.JwtAccessDeniedHandler;
 import com.example.lionproject2backend.global.security.handler.JwtAuthenticationEntryPoint;
 import com.example.lionproject2backend.global.security.jwt.JwtProperties;
+import com.example.lionproject2backend.global.security.jwt.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +35,21 @@ public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
+
+    @Autowired(required = false)
+    private LocalBypassFilter localBypassFilter;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil, objectMapper);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -76,15 +94,15 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 );
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        if (localBypassFilter != null) {
+            http.addFilterBefore(localBypassFilter, UsernamePasswordAuthenticationFilter.class);
+        }
+
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
