@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +22,8 @@ public class MentorController {
     private final MentorService mentorService;
 
     @PostMapping("/apply")
-    public ResponseEntity<ApiResponse<MentorPostResponse>> applyMentor(@RequestBody @Valid MentorPostRequest request){
-
-        // jwt 구현 후 userId 수정!
-        Long userId = 1L;
+    public ResponseEntity<ApiResponse<MentorPostResponse>> applyMentor(
+            @AuthenticationPrincipal Long userId, @RequestBody @Valid MentorPostRequest request){
 
         MentorPostResponse response = mentorService.postMentor(userId, request);
 

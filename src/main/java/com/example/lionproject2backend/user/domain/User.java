@@ -46,5 +46,14 @@ public class User extends BaseEntity{
         user.introduction = null;
         return user;
     }
+
+    public void updateProfile(String nickname, String introduction) {
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
+        if (introduction != null) {
+            this.introduction = introduction;
+        }
+    }
 }
 
