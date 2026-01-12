@@ -145,7 +145,7 @@ public class LessonServiceImpl implements LessonService {
         Lesson lesson = lessonRepository.findByIdWithDetails(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
 
-        // 도메인 로직 실행(상태: APPROVED -> IN_PROGRESS)
+        // 도메인 로직 실행(멘토 검증, 상태: APPROVED -> IN_PROGRESS)
         lesson.start(mentorId);
 
         return PutLessonStatusUpdateResponse.from(lesson);
