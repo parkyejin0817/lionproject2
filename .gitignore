@@ -41,7 +41,6 @@ out/
 
 ### Local config ###
 application-local.yml
-application*.yml
 Dockerfile.local
 
 ### Secrets ###
