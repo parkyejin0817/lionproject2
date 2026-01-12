@@ -46,3 +46,6 @@ Dockerfile.local
 .env.*
 
 src/main/generated/*
+
+/src/test/
+**/claude.md
