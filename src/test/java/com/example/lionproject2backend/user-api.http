@@ -1,0 +1,12 @@
+### 1. 내 정보 조회
+GET http://localhost:8080/api/user/me
+
+
+### 2. 내 정보 수정
+PUT http://localhost:8080/api/user/me
+Content-Type: application/json
+
+{
+  "nickname": "newNickname",
+  "introduction": "업데이트된 소개입니다"
+}

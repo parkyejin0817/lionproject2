@@ -31,9 +31,29 @@ public class User extends BaseEntity{
     private String nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private UserRole userRole;
 
     @Column(columnDefinition = "TEXT")
     private String introduction;
+
+    public static User create(String email, String encodedPassword, String nickname, UserRole role) {
+        User user = new User();
+        user.email = email;
+        user.password = encodedPassword;
+        user.nickname = nickname;
+        user.userRole = role;
+        user.introduction = null;
+        return user;
+    }
+
+    public void updateProfile(String nickname, String introduction) {
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
+        if (introduction != null) {
+            this.introduction = introduction;
+        }
+    }
 }
 

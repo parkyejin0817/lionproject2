@@ -2,39 +2,22 @@ spring:
   application:
     name: lionproject2-backend
 
-  threads:
-    virtual:
-      enabled: true 
-
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: 
-    driver-class-name: org.h2.Driver
-
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://localhost:3306/lionproject2
+    username: root
+    password: root1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
-portone:
-  # V2에서는 상점 ID(Store ID)를 사용합니다.
-  store-id: "store-9f2484a4-da8a-46d7-a826-63e218708e5a"
-  
-  # V2 API 인증은 Secret Key 하나로 충분합니다.
-  api-secret: "YWW6IbcWlw7MMqIMBUeGWpMKFhCfF8SVHwPRZaiWrPnV7oMPBrQDfj1FeUKQtTcy9ynqUYPib4KmiPdU"
+  security:
+    user:
+      name: user
+      password: password
 
-payment:
-  inicis:
-    mid: "INIpaytest"
-    
-    # 웹결제 필수 signkey (테스트용 공용키)
-    signkey: "SU5JTElURV9URVNUX1NJR05LRVk="
-    
-    # 이니시스 전용 API 인증 정보 (제공해주신 IV 값 포함)
-    ini-api-key: "test" # 테스트시 보통 test 입력
-    ini-api-iv: "HYb3yQ4f65QL89=="
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration

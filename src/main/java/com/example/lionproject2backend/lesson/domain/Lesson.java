@@ -43,6 +43,10 @@ public class Lesson extends BaseEntity {
     @Column(name = "request_message", columnDefinition = "TEXT")
     private String requestMessage;
 
+    //추가 컬럼
+    @Column(name = "reject_reason", columnDefinition = "TEXT")
+    private String rejectReason;
+
     private LocalDateTime scheduledAt;
     private LocalDateTime completedAt;
 }

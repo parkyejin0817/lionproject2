@@ -31,5 +31,10 @@ public class MentorSkill extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id")
     private Skill skill;
+
+    public MentorSkill(Mentor mentor, Skill skill) {
+        this.mentor = mentor;
+        this.skill = skill;
+    }
 }
 
