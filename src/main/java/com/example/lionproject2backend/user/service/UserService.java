@@ -1,9 +1,9 @@
 package com.example.lionproject2backend.user.service;
 
 import com.example.lionproject2backend.user.domain.User;
-import com.example.lionproject2backend.user.dto.UserGetResponse;
-import com.example.lionproject2backend.user.dto.UserUpdateRequest;
-import com.example.lionproject2backend.user.dto.UserUpdateResponse;
+import com.example.lionproject2backend.user.dto.GetUserDetailResponse;
+import com.example.lionproject2backend.user.dto.PutUserUpdateRequest;
+import com.example.lionproject2backend.user.dto.PutUserUpdateResponse;
 import com.example.lionproject2backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserGetResponse getUser(Long userId) {
+    public GetUserDetailResponse getUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        return new UserGetResponse(
+        return new GetUserDetailResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getNickname(),
@@ -30,19 +30,19 @@ public class UserService {
     }
 
     @Transactional
-    public UserUpdateResponse updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+    public PutUserUpdateResponse updateUser(Long userId, PutUserUpdateRequest putUserUpdateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        if (userUpdateRequest.getNickname() != null && !userUpdateRequest.getNickname().equals(user.getNickname())) {
-            if (userRepository.existsByNickname(userUpdateRequest.getNickname())) {
+        if (putUserUpdateRequest.getNickname() != null && !putUserUpdateRequest.getNickname().equals(user.getNickname())) {
+            if (userRepository.existsByNickname(putUserUpdateRequest.getNickname())) {
                 throw new IllegalArgumentException("이미 사용 중인 닉네임 입니다.");
             }
         }
 
-        user.updateProfile(userUpdateRequest.getNickname(), userUpdateRequest.getIntroduction());
+        user.updateProfile(putUserUpdateRequest.getNickname(), putUserUpdateRequest.getIntroduction());
 
-        return new UserUpdateResponse(
+        return new PutUserUpdateResponse(
                 user.getId(),
                 user.getNickname(),
                 user.getIntroduction());

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateRequest {
+public class PutUserUpdateRequest {
 
     private String nickname;
     private String introduction;
