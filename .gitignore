@@ -1,5 +1,8 @@
+### HELP ###
 HELP.md
-.gradle
+
+### Gradle ###
+.gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -18,7 +21,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -36,13 +39,16 @@ out/
 ### VS Code ###
 .vscode/
 
-
-### local ###
+### Local config ###
 application-local.yml
+application*.yml
 Dockerfile.local
 
-### secret ###
+### Secrets ###
 .env
 .env.*
+*.pem
+*.key
 
+### Generated sources ###
 src/main/generated/*
