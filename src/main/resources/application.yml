@@ -2,22 +2,5 @@ spring:
   application:
     name: lionproject2-backend
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/lionproject2
-    username: root
-    password: root1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-  security:
-    user:
-      name: user
-      password: password
-
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  profiles:
+    active: local

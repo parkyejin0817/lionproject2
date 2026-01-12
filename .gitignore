@@ -52,3 +52,6 @@ Dockerfile.local
 
 ### Generated sources ###
 src/main/generated/*
+
+/src/test/
+**/claude.md
