@@ -1,6 +1,7 @@
 package com.example.lionproject2backend.lesson.domain;
 
 import com.example.lionproject2backend.global.domain.BaseEntity;
+import com.example.lionproject2backend.ticket.domain.Ticket;
 import com.example.lionproject2backend.tutorial.domain.Tutorial;
 import com.example.lionproject2backend.user.domain.User;
 import jakarta.persistence.Column;
@@ -33,6 +34,10 @@ public class Lesson extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tutorial_id", nullable = false)
     private Tutorial tutorial;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mentee_id", nullable = false)
