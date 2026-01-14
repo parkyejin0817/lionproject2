@@ -17,4 +17,5 @@ public class GetMentorListResponse {
     private String career;
     private Integer reviewCount;
     private List<String> skills;
+    private int minPrice;
 }
