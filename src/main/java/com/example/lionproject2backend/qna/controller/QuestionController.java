@@ -84,4 +84,20 @@ public class QuestionController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
+
+    /**
+     * 내 질문 목록 조회
+     * GET /api/questions/my
+     * - 멘티: 내가 작성한 질문
+     * - 멘토: 내 과외에서 받은 질문
+     */
+    @GetMapping("/questions/my")
+    public ResponseEntity<ApiResponse<List<GetQuestionListResponse>>> getMyQuestions(
+            @AuthenticationPrincipal Long userId,
+            @RequestParam(required = false, defaultValue = "MENTEE") String role) {
+
+        List<GetQuestionListResponse> response = questionService.getMyQuestions(userId, role);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 }

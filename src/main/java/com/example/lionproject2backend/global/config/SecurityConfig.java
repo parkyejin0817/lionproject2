@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 "/api/tutorials",
                                 "/api/tutorials/*",
                                 "/api/tutorials/search",
+                                "/api/tutorials/*/calendar",
                                 "/api/mentors/*/reviews",
                                 "/api/tutorials/*/reviews",
                                 "/api/auth/check-email",
@@ -109,7 +110,9 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOriginPatterns(List.of(
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://localhost:5174"
         ));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of(

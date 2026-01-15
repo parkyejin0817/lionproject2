@@ -1,6 +1,8 @@
 package com.example.lionproject2backend.tutorial.controller;
 
 import com.example.lionproject2backend.global.response.ApiResponse;
+import com.example.lionproject2backend.lesson.dto.GetCalendarLessonsResponse;
+import com.example.lionproject2backend.lesson.service.LessonService;
 import com.example.lionproject2backend.tutorial.dto.PostTutorialCreateRequest;
 import com.example.lionproject2backend.tutorial.dto.GetTutorialResponse;
 import com.example.lionproject2backend.tutorial.dto.PutTutorialStatusUpdateRequest;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TutorialController {
     private final TutorialService tutorialService;
+    private final LessonService lessonService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<GetTutorialResponse>> createTutorial(
@@ -66,6 +69,14 @@ public class TutorialController {
     }
 
 
+    @GetMapping("/my")
+    public ResponseEntity<ApiResponse<List<GetTutorialResponse>>> getMyTutorials(
+            @AuthenticationPrincipal Long userId
+    ) {
+        List<GetTutorialResponse> response = tutorialService.getMyTutorials(userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<GetTutorialResponse>>> searchTutorials(
             @RequestParam String keyword
@@ -83,6 +94,20 @@ public class TutorialController {
             @Valid @RequestBody PutTutorialStatusUpdateRequest request
     ) {
         GetTutorialResponse response = tutorialService.updateTutorialStatus(userId, tutorialId, request);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 달력 예약 현황 조회 (공개 API)
+     * GET /api/tutorials/{tutorialId}/calendar?year=2026&month=1
+     */
+    @GetMapping("/{tutorialId}/calendar")
+    public ResponseEntity<ApiResponse<GetCalendarLessonsResponse>> getCalendarLessons(
+            @PathVariable Long tutorialId,
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        GetCalendarLessonsResponse response = lessonService.getCalendarLessons(tutorialId, year, month);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

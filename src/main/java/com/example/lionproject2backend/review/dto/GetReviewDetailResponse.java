@@ -17,6 +17,8 @@ public class GetReviewDetailResponse {
     private String nickname;
     private String content;
     private LocalDateTime createdAt;
+    private Long tutorialId;
+    private String tutorialTitle;
 
     public static GetReviewDetailResponse from(Review review) {
         return GetReviewDetailResponse.builder()
@@ -34,6 +36,17 @@ public class GetReviewDetailResponse {
                 .nickname(review.getMentee().getNickname())
                 .content(review.getContent())
                 .createdAt(review.getCreatedAt())
+                .build();
+    }
+
+    public static GetReviewDetailResponse fromWithTutorialInfo(Review review) {
+        return GetReviewDetailResponse.builder()
+                .id(review.getId())
+                .rating(review.getRating())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .tutorialId(review.getTutorial().getId())
+                .tutorialTitle(review.getTutorial().getTitle())
                 .build();
     }
 }

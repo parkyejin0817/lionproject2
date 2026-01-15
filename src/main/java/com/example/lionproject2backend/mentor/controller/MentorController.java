@@ -43,4 +43,14 @@ public class MentorController {
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    /**
+     * 현재 로그인한 멘토의 프로필 조회
+     */
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<GetMentorDetailResponse>> getMyMentorProfile(
+            @AuthenticationPrincipal Long userId) {
+        GetMentorDetailResponse response = mentorService.getMentorByUserId(userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 }

@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,10 +39,10 @@ public class PaymentService {
     @Transactional
     public PaymentCreateResponse createPayment(Long tutorialId, Long userId, PaymentCreateRequest request) {
         Tutorial tutorial = tutorialRepository.findById(tutorialId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 과외입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.TUTORIAL_NOT_FOUND));
 
         User mentee = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Payment payment = Payment.create(tutorial, mentee, request.getCount());
         Payment savedPayment = paymentRepository.save(payment);
@@ -61,7 +60,7 @@ public class PaymentService {
     public PaymentVerifyResponse verifyAndCompletePayment(Long paymentId, PaymentVerifyRequest request,Long userId) {
         // 1. Payment 조회
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 결제입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
 
         //본인 확인하는 로직 추가
         if (!payment.getMentee().getId().equals(userId)) {

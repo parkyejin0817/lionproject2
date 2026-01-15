@@ -85,6 +85,14 @@ public class ReviewService {
         return GetReviewDetailResponse.from(review);
     }
 
+    // 내가 작성한 모든 리뷰 조회
+    public java.util.List<GetReviewDetailResponse> getMyAllReviews(Long userId) {
+        return reviewRepository.findByMenteeIdOrderByCreatedAtDesc(userId)
+                .stream()
+                .map(GetReviewDetailResponse::fromWithTutorialInfo)
+                .toList();
+    }
+
     // 리뷰 리스트 조회 (공개)
     public Page<GetReviewDetailResponse> list(Long tutorialId, Pageable pageable) {
         tutorialRepository.findById(tutorialId)

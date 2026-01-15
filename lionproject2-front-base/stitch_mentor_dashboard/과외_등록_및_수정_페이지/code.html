@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>과외 등록 및 수정 - DevSolve</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0b0e14",
+                        "surface-dark": "#161b22",
+                        "border-dark": "#30363d"
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', 'Noto Sans KR', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-border-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 md:px-20 py-3">
+<div class="max-w-[1200px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">terminal</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">DevSolve</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">대시보드</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">멘토링 찾기</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">커뮤니티</a>
+</nav>
+<div class="h-6 w-px bg-slate-200 dark:border-border-dark hidden md:block"></div>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 hover:bg-slate-100 dark:hover:bg-surface-dark transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-slate-200 dark:border-border-dark" data-alt="User profile avatar circle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCrisCNOxvRSc4GiUxk0RPF68Xc9JF65H9nVTFZpsD0icwt1CsUZQJtlNahhBX0fjYzrR2oHuSy9NMo-tRoRIkSqO_1pIWaSY4Hflr2ImOqR2_F0UpR6zi68z0EoiaLeG1wax3r9iVhmOge_QlXl-sDCpx4F5E4CyLotX2yVVM2Rza3r5-ruitj5qMprm45GMfZWjNs3UMRLAyuAQ_NYHWFYbZdScBj3bPjPrJ0OINQiRFgdbINlAjk0k-1VZ0UDt1IyFUNoPlBJvg");'>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[800px] mx-auto px-6 py-10">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-white text-3xl font-black leading-tight tracking-tight">과외 정보 등록</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal">나만의 전문성을 공유하고 함께 성장할 수강생을 모집하세요.</p>
+</div>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-slate-100 dark:bg-surface-dark text-slate-700 dark:text-slate-200 text-sm font-bold transition-all hover:bg-slate-200 dark:hover:bg-border-dark border border-transparent dark:border-border-dark">
+<span>대시보드로 돌아가기</span>
+</button>
+</div>
+<!-- Registration Form Container -->
+<div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-xl shadow-sm overflow-hidden">
+<!-- Section: Basic Info -->
+<div class="p-6 border-b border-slate-100 dark:border-border-dark">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+                    기본 정보
+                </h3>
+<div class="space-y-6">
+<!-- Title Input -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-semibold">수업 제목</label>
+<input class="w-full rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary px-4 py-3 placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all outline-none" placeholder="예: 자바스크립트 기초부터 리액트 실무까지" type="text"/>
+<p class="text-xs text-slate-500">수강생의 이목을 끌 수 있는 명확한 제목을 입력해 주세요.</p>
+</div>
+<!-- Description Input -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-semibold">수업 상세 설명</label>
+<textarea class="w-full min-h-[240px] rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary px-4 py-3 placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all outline-none resize-none" placeholder="커리큘럼, 대상 독자, 수업 방식 등을 자유롭게 기술해 주세요. Markdown 지원"></textarea>
+</div>
+</div>
+</div>
+<!-- Section: Skills & Tags -->
+<div class="p-6 border-b border-slate-100 dark:border-border-dark">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">label</span>
+                    사용 기술 (태그)
+                </h3>
+<div class="flex flex-col gap-4">
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20">
+                            React <button class="hover:text-primary/70"><span class="material-symbols-outlined text-sm">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20">
+                            TypeScript <button class="hover:text-primary/70"><span class="material-symbols-outlined text-sm">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20">
+                            Node.js <button class="hover:text-primary/70"><span class="material-symbols-outlined text-sm">close</span></button>
+</span>
+</div>
+<div class="relative">
+<input class="w-full rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary px-4 py-3 placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all outline-none" placeholder="기술 스택 입력 후 Enter (예: Next.js, Docker)" type="text"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">add</span>
+</div>
+<p class="text-xs text-slate-500">최대 5개까지 등록 가능하며, 등록된 태그는 검색 노출에 사용됩니다.</p>
+</div>
+</div>
+<!-- Section: Pricing & Schedule -->
+<div class="p-6">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">payments</span>
+                    수강료 및 수업 시간
+                </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-semibold">회당 수강료</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">₩</span>
+<input class="w-full rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary pl-9 pr-4 py-3 placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all outline-none" placeholder="0" type="number"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm font-semibold">1회 수업 시간</label>
+<div class="flex gap-2">
+<input class="flex-1 rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-background-dark text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary px-4 py-3 placeholder:text-slate-400 dark:placeholder:text-slate-600 transition-all outline-none" placeholder="60" type="number"/>
+<select class="rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-background-dark text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary focus:border-primary px-3 py-3 outline-none">
+<option>분</option>
+<option>시간</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Info Alert -->
+<div class="mt-8 p-4 bg-primary/5 border border-primary/20 rounded-lg flex gap-3">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">DevSolve 안심 결제 시스템</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">등록하신 수강료의 10%가 플랫폼 이용 수수료로 차감되어 정산됩니다.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Actions -->
+<div class="mt-8 flex items-center justify-end gap-3">
+<button class="px-6 py-3 rounded-lg text-slate-600 dark:text-slate-400 font-bold hover:bg-slate-100 dark:hover:bg-surface-dark transition-colors">
+                취소
+            </button>
+<button class="px-10 py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95">
+                과외 정보 저장하기
+            </button>
+</div>
+</main>
+<footer class="mt-12 py-8 border-t border-slate-200 dark:border-border-dark">
+<div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-500 text-sm">© 2024 DevSolve Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-primary text-xs" href="#">이용약관</a>
+<a class="text-slate-500 hover:text-primary text-xs" href="#">개인정보처리방침</a>
+<a class="text-slate-500 hover:text-primary text-xs" href="#">고객센터</a>
+</div>
+</div>
+</footer>
+</body></html>

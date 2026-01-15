@@ -13,4 +13,5 @@ public interface LessonService {
     PutLessonStatusUpdateResponse reject(Long lessonId, Long mentorId, PutLessonRejectRequest request);
     PutLessonStatusUpdateResponse start(Long lessonId, Long mentorId);
     PutLessonStatusUpdateResponse complete(Long lessonId, Long mentorId);
+    GetCalendarLessonsResponse getCalendarLessons(Long tutorialId, int year, int month);
 }

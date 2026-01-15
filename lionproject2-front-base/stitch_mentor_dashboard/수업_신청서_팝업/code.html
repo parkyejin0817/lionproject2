@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>body {
+    font-family: "Lexend", "Noto Sans KR", sans-serif
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+select {
+    appearance: none;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCi1TcdUwvvQUpkcSbcmDgfjKit2-OZ2r0Va-GQHwRSHGBh-1SxAGHLoydCqBkIX4yfyGT-CPoQ5KfwHFOeEIh3aNSa-dM_0Po3Ja_BzLmUuuv-neLcCuLYZo7tRYMb_5AmjC8sYhZNWCWYiJXwK3CW5jP9yfF_VTBTzQzmmIaAoL2NnxDIQ6I8Dkd44O5yD0qBVcP7BwMzQByosIT1PyR25R6yj0X34Bv0F_p5KKoMCJo4o1zkwm2wQbNqQAnxMYbfmMLnsSP9BTU);
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em
+    }</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4">
+<!-- Modal Container -->
+<div class="relative w-full max-w-[640px] bg-[#192633] rounded-xl shadow-2xl overflow-hidden border border-[#324d67]">
+<!-- Header -->
+<div class="px-8 pt-8 pb-4 flex justify-between items-center">
+<h1 class="text-white text-2xl font-bold tracking-tight">수업 신청하기</h1>
+<button class="text-[#92adc9] hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="px-8 py-4 space-y-6">
+<!-- Summary Card -->
+<div class="flex items-center gap-4 rounded-lg bg-[#111a22] p-5 border border-[#324d67]">
+<div class="w-20 h-20 bg-center bg-no-repeat bg-cover rounded-lg flex-shrink-0" data-alt="Code editor with React logo icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB7py6UGnSioxCZIX3Nmi8s9ie0WBDzQhaNFsJXrQ0xmhDbRs0naDDm2Ws45Bl6uwkTzJ-GJO4vFUCBXs4N7UapGy4_MaMLGRGxBH55vBkA6GW5jsOVaSiOtTjPZollzhiFZLOjobWoAzZuHgLhM3ZnoRbFuKEyoYFd84IL_tqgKEM-Wb2d6dqPkn4sq1TEhH8HBkVaczRGWkTCYYzNhylZt4G_GnOA2ePuRO-FHKL7C9n_HLmHJYh73Q5wvf78632Y6uSs3yC8EnE");'>
+</div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-[#92adc9] text-xs font-semibold uppercase tracking-wider">선택한 수업</p>
+<p class="text-white text-lg font-bold leading-tight">React 성능 최적화 마스터 클래스</p>
+<div class="flex items-center justify-between mt-1">
+<p class="text-primary text-sm font-medium">1:1 맞춤형 멘토링</p>
+<p class="text-white text-lg font-bold">₩55,000</p>
+</div>
+</div>
+</div>
+<!-- Date Picker Section -->
+<div class="space-y-3">
+<label class="block text-white text-base font-semibold">수업 희망 일시</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Calendar Picker -->
+<div class="flex flex-col gap-0.5 bg-[#111a22] rounded-lg border border-[#324d67] p-3">
+<div class="flex items-center p-1 justify-between mb-2">
+<button class="text-white hover:bg-white/10 rounded-full p-1"><span class="material-symbols-outlined">chevron_left</span></button>
+<p class="text-white text-sm font-bold flex-1 text-center">2024년 5월</p>
+<button class="text-white hover:bg-white/10 rounded-full p-1"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+<div class="grid grid-cols-7 text-center mb-1">
+<span class="text-[#92adc9] text-[11px] font-bold">S</span>
+<span class="text-[#92adc9] text-[11px] font-bold">M</span>
+<span class="text-[#92adc9] text-[11px] font-bold">T</span>
+<span class="text-[#92adc9] text-[11px] font-bold">W</span>
+<span class="text-[#92adc9] text-[11px] font-bold">T</span>
+<span class="text-[#92adc9] text-[11px] font-bold">F</span>
+<span class="text-[#92adc9] text-[11px] font-bold">S</span>
+</div>
+<div class="grid grid-cols-7 gap-1">
+<!-- Placeholder dates -->
+<div class="h-8 flex items-center justify-center text-[#324d67] text-xs">28</div>
+<div class="h-8 flex items-center justify-center text-[#324d67] text-xs">29</div>
+<div class="h-8 flex items-center justify-center text-[#324d67] text-xs">30</div>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">1</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">2</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">3</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">4</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">5</button>
+<button class="h-8 w-full text-white text-xs bg-primary rounded-lg font-bold">6</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">7</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">8</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">9</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">10</button>
+<button class="h-8 w-full text-white text-xs hover:bg-primary/20 rounded-lg">11</button>
+</div>
+</div>
+<!-- Time Selection -->
+<div class="flex flex-col justify-end gap-4">
+<label class="flex flex-col w-full">
+<p class="text-[#92adc9] text-xs font-medium pb-1.5 pl-1">시간 선택</p>
+<select class="w-full rounded-lg text-white border border-[#324d67] bg-[#111a22] focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 text-sm font-normal outline-none transition-all">
+<option disabled="" selected="" value="">시간을 선택해주세요</option>
+<option value="10:00">오전 10:00</option>
+<option value="11:00">오전 11:00</option>
+<option value="13:00">오후 01:00</option>
+<option value="14:00">오후 02:00</option>
+<option value="15:00">오후 03:00</option>
+<option value="16:00">오후 04:00</option>
+<option value="17:00">오후 05:00</option>
+</select>
+</label>
+<div class="p-3 bg-primary/10 border border-primary/20 rounded-lg">
+<p class="text-primary text-[13px] leading-relaxed">
+<span class="material-symbols-outlined text-[16px] align-middle mr-1">info</span>
+                                멘토의 일정에 따라 시간이 조정될 수 있습니다.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Message Section -->
+<div class="space-y-3">
+<label class="block text-white text-base font-semibold">멘토에게 전달할 메시지</label>
+<textarea class="w-full rounded-lg text-white border border-[#324d67] bg-[#111a22] focus:border-primary focus:ring-1 focus:ring-primary min-h-[120px] placeholder:text-[#4a6b8a] p-4 text-sm font-normal outline-none transition-all resize-none" placeholder="배우고 싶은 내용을 상세히 적어주세요 (예: 특정 코드 리뷰 요청, 아키텍처 상담 등)"></textarea>
+<p class="text-right text-[#92adc9] text-xs">0 / 500</p>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="px-8 py-6 bg-[#111a22] flex items-center justify-end gap-3 border-t border-[#324d67]">
+<button class="px-6 py-3 rounded-lg text-white font-medium hover:bg-white/5 transition-colors border border-[#324d67]">
+                취소
+            </button>
+<button class="px-8 py-3 rounded-lg bg-primary text-white font-bold hover:bg-[#0e69c5] transition-all shadow-lg flex items-center gap-2">
+<span>신청 및 결제하기</span>
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</button>
+</div>
+</div>
+</body></html>

@@ -151,4 +151,29 @@ public class QuestionService {
         return new PostAnswerResponse(savedAnswer.getId());
     }
 
+    /**
+     * 내 질문 목록 조회
+     * GET /api/questions/my
+     * - 멘티: 내가 작성한 질문
+     * - 멘토: 내 과외에서 받은 질문
+     */
+    public List<GetQuestionListResponse> getMyQuestions(Long userId, String role) {
+        List<Question> questions;
+
+        if ("MENTOR".equals(role)) {
+            questions = questionRepository.findByMentorUserId(userId);
+        } else {
+            questions = questionRepository.findByMenteeId(userId);
+        }
+
+        return questions.stream()
+                .map(q -> new GetQuestionListResponse(
+                        q.getId(),
+                        q.getTitle(),
+                        q.getContent(),
+                        q.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

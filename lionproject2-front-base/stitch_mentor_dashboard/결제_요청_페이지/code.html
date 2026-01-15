@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>결제하기 | DevSolve</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-[1200px] mx-auto px-4 md:px-10 h-16 flex items-center justify-between gap-4">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+<h2 class="text-xl font-black tracking-tight">DevSolve</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">튜터 찾기</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">나의 수업</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">커뮤니티</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border border-slate-300 dark:border-slate-600">
+<img class="w-full h-full object-cover" data-alt="User profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT6nM3KW-TX8ri45CVfwH7lCY4IilekK13vzybsZjGbAP3Bp6KFa2hhoYpA8l_q3mszRgo1mSDH8yv_ziHKY0ExBIn6tOGzZPAAo8zp9PDvSozxka592gjv8YIT5XbCdTAWcU-SVVSPgGDcYCBz7plkqRIxbNQ3kW0H6zf7v69x3-fX9FQfjdVuA8BVvrI0p8ZUxMKEDC9hNIo0U8EeCa900sYOo6gsPIZlIP6YSxabuqxTPZ3mz5fBb5tfg9M5p31iLtC2yt-vxM"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto px-4 md:px-10 py-8">
+<!-- Page Title -->
+<div class="mb-8">
+<h1 class="text-3xl font-black tracking-tight">결제하기</h1>
+<p class="text-slate-500 dark:text-slate-400 mt-2">수업 내용을 확인하고 결제를 진행해주세요.</p>
+</div>
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Main Content Area (Left) -->
+<div class="flex-1 space-y-8">
+<!-- Lesson Summary Card -->
+<section>
+<h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                        수업 정보
+                    </h2>
+<div class="bg-white dark:bg-[#192233] rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<div class="flex flex-col md:flex-row gap-6">
+<div class="w-full md:w-48 aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+<img class="w-full h-full object-cover" data-alt="React performance optimization tutorial thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALR-Jybx-qOMFPdIqxuNMfxGAnQT1w4Wxo1N5laxO-AyYfJ-iVKuUYHxFPA2BFDdERkGBHNU8Yz-v6PttgjdoWTdNxjU91CEtK43GcvDZi4LnV0dM_L5jcki3iZGM712Df25rGVuzwHFMXyWQU04frBbp0PTJiXeYojYX5UgmsoC8gYbHfiGd8-oi8hvBfb9_4i13vVtQOfmS4vHNDNgstkPGdtQUwRXSjDftz3NU3bpQ_SswfnsIPl12HTt_TO3Q_XeaMeKLvWD4"/>
+</div>
+<div class="flex-1 space-y-3">
+<div class="space-y-1">
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Professional Course</span>
+<h3 class="text-xl font-bold">React 성능 최적화 마스터 클래스</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">person</span>
+<span>멘토: <span class="text-slate-900 dark:text-white font-medium">DevMaster</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">calendar_today</span>
+<span>2024년 11월 25일 (월)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">schedule</span>
+<span>14:00 - 15:00 (60분)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">payments</span>
+<span>수업료: ₩55,000</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Payment Method Selection -->
+<section>
+<h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                        결제 수단 선택
+                    </h2>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<label class="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-[#192233] p-4 transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+<input checked="" class="sr-only" name="payment_method" type="radio"/>
+<span class="material-symbols-outlined text-2xl mb-2">credit_card</span>
+<span class="text-sm font-bold">신용카드</span>
+</label>
+<label class="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-[#192233] p-4 transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+<input class="sr-only" name="payment_method" type="radio"/>
+<span class="material-symbols-outlined text-2xl mb-2">account_balance</span>
+<span class="text-sm font-bold">계좌이체</span>
+</label>
+<label class="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-[#192233] p-4 transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+<input class="sr-only" name="payment_method" type="radio"/>
+<span class="material-symbols-outlined text-2xl mb-2">qr_code_2</span>
+<span class="text-sm font-bold">간편결제</span>
+</label>
+</div>
+</section>
+<!-- Discount & Coupons -->
+<section>
+<h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">confirmation_number</span>
+                        할인 및 쿠폰
+                    </h2>
+<div class="bg-white dark:bg-[#192233] rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+<div class="flex flex-col sm:flex-row gap-3">
+<div class="relative flex-1">
+<input class="w-full h-12 rounded-lg bg-slate-50 dark:bg-[#111722] border-slate-200 dark:border-slate-800 text-sm focus:ring-primary focus:border-primary" placeholder="쿠폰 코드를 입력하세요" type="text"/>
+</div>
+<button class="h-12 px-6 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 font-bold rounded-lg transition-colors text-sm">
+                                쿠폰 조회
+                            </button>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-3">보유 중인 쿠폰이 2개 있습니다. [쿠폰 조회]를 클릭해 확인하세요.</p>
+</div>
+</section>
+</div>
+<!-- Sidebar Summary (Right) -->
+<aside class="w-full lg:w-[380px]">
+<div class="sticky top-24 space-y-4">
+<div class="bg-white dark:bg-[#192233] rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-lg">
+<h3 class="text-xl font-bold mb-6">최종 결제 금액</h3>
+<div class="space-y-4 text-sm mb-6 border-b border-slate-100 dark:border-slate-800 pb-6">
+<div class="flex justify-between items-center text-slate-600 dark:text-slate-400">
+<span>주문 금액</span>
+<span class="text-slate-900 dark:text-white font-medium">₩55,000</span>
+</div>
+<div class="flex justify-between items-center text-slate-600 dark:text-slate-400">
+<span>할인 금액</span>
+<span class="text-red-500 font-medium">- ₩5,000</span>
+</div>
+<div class="flex justify-between items-center text-slate-600 dark:text-slate-400">
+<span>포인트 사용</span>
+<span class="text-slate-900 dark:text-white font-medium">₩0</span>
+</div>
+</div>
+<div class="flex justify-between items-baseline mb-8">
+<span class="font-bold">총 결제 금액</span>
+<span class="text-3xl font-black text-primary">₩50,000</span>
+</div>
+<div class="space-y-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<input class="mt-1 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                    주문 내용을 확인하였으며, <span class="text-slate-900 dark:text-slate-200 font-medium underline underline-offset-2">개인정보 수집 및 이용</span>과 <span class="text-slate-900 dark:text-slate-200 font-medium underline underline-offset-2">결제 대행 서비스 약관</span>에 모두 동의합니다.
+                                </span>
+</label>
+<button class="w-full py-4 bg-primary hover:bg-primary/90 text-white font-black text-lg rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+<span>결제 요청하기</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="p-4 bg-slate-50 dark:bg-[#111722]/50 rounded-lg border border-dashed border-slate-200 dark:border-slate-800">
+<div class="flex gap-3 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">security</span>
+<p class="text-[11px] leading-tight">
+                                DevSolve는 안전한 결제를 위해 최선을 다하고 있습니다. 모든 결제 정보는 암호화되어 전송됩니다.
+                            </p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 bg-white dark:bg-background-dark">
+<div class="max-w-[1200px] mx-auto px-4 md:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-base">terminal</span>
+<span class="text-sm font-bold tracking-tight">DevSolve</span>
+<span class="mx-2 text-slate-700">|</span>
+<span class="text-xs">© 2024 DevSolve Inc. All rights reserved.</span>
+</div>
+<div class="flex gap-6 text-xs text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary" href="#">이용약관</a>
+<a class="hover:text-primary" href="#">개인정보처리방침</a>
+<a class="hover:text-primary" href="#">환불규정</a>
+<a class="hover:text-primary" href="#">고객센터</a>
+</div>
+</div>
+</footer>
+</body></html>

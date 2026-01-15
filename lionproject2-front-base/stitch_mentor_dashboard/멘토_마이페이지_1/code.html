@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevSolve - 멘토 마이페이지</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<aside class="w-64 flex flex-col bg-white dark:bg-[#111a22] border-r border-slate-200 dark:border-slate-800">
+<div class="p-6">
+<div class="flex items-center gap-2 mb-8">
+<div class="bg-primary p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-white">code_blocks</span>
+</div>
+<span class="text-xl font-black tracking-tight text-primary">DevSolve</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">person</span>
+<p class="text-sm font-semibold">프로필</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-[#92adc9] hover:bg-slate-100 dark:hover:bg-[#233648] cursor-pointer">
+<span class="material-symbols-outlined">book</span>
+<p class="text-sm font-medium">수업 관리</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-[#92adc9] hover:bg-slate-100 dark:hover:bg-[#233648] cursor-pointer">
+<span class="material-symbols-outlined">payments</span>
+<p class="text-sm font-medium">수익 내역</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-[#92adc9] hover:bg-slate-100 dark:hover:bg-[#233648] cursor-pointer">
+<span class="material-symbols-outlined">star</span>
+<p class="text-sm font-medium">리뷰 관리</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-[#92adc9] hover:bg-slate-100 dark:hover:bg-[#233648] cursor-pointer">
+<span class="material-symbols-outlined">video_library</span>
+<p class="text-sm font-medium">튜토리얼 관리</p>
+</div>
+</div>
+</div>
+<div class="mt-auto p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 mb-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar of mentor DevMaster K" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCGdOiIhBxclnxbnQy2sx2bF6faiwZDMTNQOAZ9xoSWF5itZl2WyJeRDyozZR1_O40EqEVOiVD-KqF9rWBL5Fx58fqmsO9CqeIfTL7YxVbQtNeVHRbeB5V_JKnO0LFdqPqTLMAEuRN834R3u_4jzEgTE_woUSglX0jWKF65Zn5MkEGMcMx5b5UqkjFahQy-9XrN0XAHNpfvk4_uUTWhS0qwt7amZGaWSftSDzKahFdkFz1qGekVzZEfxomQvw-eG0bhLUhL7Xwp6aM");'></div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-sm font-bold truncate">DevMaster K</p>
+<p class="text-xs text-slate-500 dark:text-[#92adc9] truncate">시니어 개발자</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-slate-100 dark:bg-[#233648] text-slate-700 dark:text-white text-sm font-bold hover:bg-slate-200 dark:hover:bg-[#324d67] transition-colors">
+<span class="material-symbols-outlined text-sm">logout</span>
+<span>로그아웃</span>
+</button>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="max-w-5xl mx-auto p-8">
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-4xl font-black leading-tight tracking-tight">멘토 마이페이지</h1>
+<p class="text-slate-500 dark:text-[#92adc9] text-base">오늘도 지식 공유로 세상을 바꿔보세요.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-white dark:bg-[#233648] p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-[#111a22] rounded-xl border border-slate-200 dark:border-slate-800 p-6 mb-8">
+<div class="flex flex-col @[520px]:flex-row @[520px]:justify-between @[520px]:items-center gap-6">
+<div class="flex gap-6 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 border-4 border-primary/20" data-alt="Professional headshot of the mentor" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwVE75aWWSkxtZXBERxMjlgWBmKApV8ViJbBlGCYSqloA7MUyOGJDbpa_PvNEEZW2RqREKE4pY-guNhZjHuXp8rtWCWDa6KinfqstvrKN_XdXRSsIYP3DkaESXVXmeS_8L1aXGUucIRmosME8ASta-v2zhPWM9WgA2jBckr7HUFJ_Ibp0bofsL03CafknzZtXNo-Dvl7mmHj_NVz3f5vL4nxVWYA0xJR4q_GuhFSQRyrT3gNspfI4BUUc54kW4uDWgUzGCazoo6Eo");'></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h2 class="text-2xl font-bold">DevMaster K</h2>
+<span class="bg-yellow-400/10 text-yellow-500 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">star</span> 4.9
+                                    </span>
+</div>
+<p class="text-slate-500 dark:text-[#92adc9] mt-1 italic">"10년차 풀스택 개발자의 실전 압축 가이드"</p>
+<div class="flex gap-2 mt-3 flex-wrap">
+<div class="flex h-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233648] px-3">
+<p class="text-slate-700 dark:text-white text-xs font-semibold">#React</p>
+</div>
+<div class="flex h-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233648] px-3">
+<p class="text-slate-700 dark:text-white text-xs font-semibold">#Next.js</p>
+</div>
+<div class="flex h-7 items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233648] px-3">
+<p class="text-slate-700 dark:text-white text-xs font-semibold">#Architecture</p>
+</div>
+</div>
+</div>
+</div>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span>프로필 수정</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#111a22] border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-[#92adc9] text-sm font-medium">대기 중인 요청</p>
+<span class="material-symbols-outlined text-primary">pending_actions</span>
+</div>
+<p class="text-3xl font-black leading-tight">5<span class="text-lg font-normal ml-1 text-slate-400">건</span></p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#111a22] border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-[#92adc9] text-sm font-medium">진행 중인 수업</p>
+<span class="material-symbols-outlined text-green-500">groups</span>
+</div>
+<p class="text-3xl font-black leading-tight">3<span class="text-lg font-normal ml-1 text-slate-400">명</span></p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-primary dark:bg-primary border border-primary/20 shadow-xl shadow-primary/10">
+<div class="flex items-center justify-between">
+<p class="text-primary-foreground text-white/80 text-sm font-medium">누적 수익</p>
+<span class="material-symbols-outlined text-white">account_balance_wallet</span>
+</div>
+<p class="text-white text-3xl font-black leading-tight tracking-tight">₩4,500,000</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold">최근 수업 요청</h3>
+<button class="text-primary text-xs font-bold hover:underline">모두 보기</button>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-white dark:bg-[#111a22] p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="bg-slate-200 dark:bg-slate-700 rounded-lg h-10 w-10 flex items-center justify-center text-lg font-bold">김</div>
+<div>
+<p class="text-sm font-bold">김지민 학생</p>
+<p class="text-xs text-slate-500 dark:text-[#92adc9]">Java 기초 및 Spring Boot 심화</p>
+</div>
+</div>
+<span class="text-[10px] text-slate-400">방금 전</span>
+</div>
+<div class="flex gap-2">
+<button class="w-full h-10 flex items-center justify-center gap-1 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all shadow-sm">
+<span>요청 보기</span>
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-[#111a22] p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="bg-slate-200 dark:bg-slate-700 rounded-lg h-10 w-10 flex items-center justify-center text-lg font-bold">이</div>
+<div>
+<p class="text-sm font-bold">이동욱 학생</p>
+<p class="text-xs text-slate-500 dark:text-[#92adc9]">React Hooks 마스터 코스</p>
+</div>
+</div>
+<span class="text-[10px] text-slate-400">2시간 전</span>
+</div>
+<div class="flex gap-2">
+<button class="w-full h-10 flex items-center justify-center gap-1 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all shadow-sm">
+<span>요청 보기</span>
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold">튜토리얼 관리</h3>
+<button class="flex items-center gap-1 bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary/20">
+<span class="material-symbols-outlined text-sm">add</span> 신규 등록
+                            </button>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-white dark:bg-[#111a22] p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="flex gap-4 items-center overflow-hidden">
+<div class="h-12 w-16 bg-slate-100 dark:bg-[#233648] rounded-lg overflow-hidden shrink-0">
+<div class="w-full h-full bg-gradient-to-br from-primary/40 to-indigo-600/40 flex items-center justify-center" data-alt="Tutorial cover for Clean Code">
+<span class="material-symbols-outlined text-white/50">menu_book</span>
+</div>
+</div>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">Clean Code 101: 유지보수가 쉬운 코드</p>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-[10px] text-slate-400 flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">visibility</span> 1.2k</span>
+<span class="text-[10px] text-green-500 font-bold">판매 중</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_square</span>
+</button>
+</div>
+<div class="bg-white dark:bg-[#111a22] p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="flex gap-4 items-center overflow-hidden">
+<div class="h-12 w-16 bg-slate-100 dark:bg-[#233648] rounded-lg overflow-hidden shrink-0">
+<div class="w-full h-full bg-gradient-to-br from-emerald-400/40 to-teal-600/40 flex items-center justify-center" data-alt="Tutorial cover for Next.js 14">
+<span class="material-symbols-outlined text-white/50">javascript</span>
+</div>
+</div>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">Next.js 14 App Router 완벽 가이드</p>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-[10px] text-slate-400 flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">visibility</span> 856</span>
+<span class="text-[10px] text-slate-400 font-bold">심사 중</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_square</span>
+</button>
+</div>
+<div class="bg-white dark:bg-[#111a22] p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="flex gap-4 items-center overflow-hidden">
+<div class="h-12 w-16 bg-slate-100 dark:bg-[#233648] rounded-lg overflow-hidden shrink-0">
+<div class="w-full h-full bg-gradient-to-br from-orange-400/40 to-red-600/40 flex items-center justify-center" data-alt="Tutorial cover for System Design">
+<span class="material-symbols-outlined text-white/50">account_tree</span>
+</div>
+</div>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">대규모 트래픽을 견디는 시스템 설계</p>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-[10px] text-slate-400 flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">visibility</span> 3.1k</span>
+<span class="text-[10px] text-green-500 font-bold">판매 중</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit_square</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
