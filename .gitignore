@@ -54,5 +54,6 @@ src/main/generated/*
 
 /src/test/
 **/claude.md
+.claude
 
 .DS_Store

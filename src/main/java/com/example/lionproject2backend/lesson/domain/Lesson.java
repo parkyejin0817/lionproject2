@@ -105,12 +105,12 @@ public class Lesson extends BaseEntity {
     }
 
     /**
-     * 수업 시작 (멘토)
+     * 수업 예정 (멘토)
      */
     public void start(Long mentorId) {
         validateMentorAuthority(mentorId);
-        validateStatusTransition(LessonStatus.CONFIRMED, "시작");
-        this.status = LessonStatus.IN_PROGRESS;
+        validateStatusTransition(LessonStatus.CONFIRMED, "예정");
+        this.status = LessonStatus.SCHEDULED;
     }
 
     /**
@@ -118,7 +118,7 @@ public class Lesson extends BaseEntity {
      */
     public void complete(Long mentorId) {
         validateMentorAuthority(mentorId);
-        validateStatusTransition(LessonStatus.IN_PROGRESS, "완료");
+        validateStatusTransition(LessonStatus.SCHEDULED, "완료");
         this.status = LessonStatus.COMPLETED;
         this.completedAt = LocalDateTime.now();
     }
