@@ -10,7 +10,7 @@ public enum LessonStatus {
     REQUESTED("요청됨"),
     CONFIRMED("확정됨"),
     REJECTED("거절됨"),
-    IN_PROGRESS("진행중"),
+    SCHEDULED("예정"),
     COMPLETED("완료됨"),
     CANCELLED("취소됨");
 
