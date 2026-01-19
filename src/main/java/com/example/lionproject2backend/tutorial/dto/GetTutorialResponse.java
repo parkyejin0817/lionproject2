@@ -15,21 +15,23 @@ public class GetTutorialResponse {
     private String description;
     private int price;
     private int duration;
-    private BigDecimal rating;
+    private Double rating;
+    private int reviewCount;
     private TutorialStatus tutorialStatus;
 
     private Long mentorId;
 
     private List<String> skills;
 
-    public static GetTutorialResponse from(Tutorial tutorial) {
+    public static GetTutorialResponse from(Tutorial tutorial, int reviewCount, double averageRating) {
         return GetTutorialResponse.builder()
                 .id(tutorial.getId())
                 .title(tutorial.getTitle())
                 .description(tutorial.getDescription())
                 .price(tutorial.getPrice())
                 .duration(tutorial.getDuration())
-                .rating(tutorial.getRating())
+                .rating(averageRating)
+                .reviewCount(reviewCount)
                 .tutorialStatus(tutorial.getTutorialStatus())
                 .mentorId(tutorial.getMentor().getId())
                 .skills(tutorial.getTutorialSkills()
@@ -38,5 +40,9 @@ public class GetTutorialResponse {
                         .toList())
                 .build();
 
+    }
+
+    public static GetTutorialResponse from(Tutorial tutorial) {
+        return from(tutorial, 0, 0.0);
     }
 }

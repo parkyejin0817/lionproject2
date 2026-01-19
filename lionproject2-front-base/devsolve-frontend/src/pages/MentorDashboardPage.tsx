@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import * as lessonApi from '@/api/lesson';
 import * as tutorialApi from '@/api/tutorial';
+import * as mentorApi from '@/api/mentor';
 import type { Lesson } from '@/api/lesson';
 import type { Tutorial } from '@/api/tutorial';
 
@@ -33,6 +34,7 @@ export default function MentorDashboardPage() {
 
   const [lessonRequests, setLessonRequests] = useState<Lesson[]>([]);
   const [myTutorials, setMyTutorials] = useState<Tutorial[]>([]);
+  const [mentorId, setMentorId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -51,27 +53,30 @@ export default function MentorDashboardPage() {
     }
   }, [authLoading, isAuthenticated, user, navigate]);
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const [requestsRes, tutorialsRes] = await Promise.all([
-        lessonApi.getLessonRequests(),
-        tutorialApi.getMyTutorials(),
-      ]);
+    const fetchData = async () => {
+        setIsLoading(true);
+        try {
+            const [requestsRes, tutorialsRes, mentorRes] = await Promise.all([
+                lessonApi.getLessonRequests(),
+                tutorialApi.getMyTutorials(),
+                mentorApi.getMyMentorProfile(),
+            ]);
 
-      // 백엔드는 { lessons: [...] } 형태로 반환
-      if (requestsRes.success && requestsRes.data?.lessons) {
-        setLessonRequests(requestsRes.data.lessons);
-      }
-      if (tutorialsRes.success && Array.isArray(tutorialsRes.data)) {
-        setMyTutorials(tutorialsRes.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+            if (requestsRes.success && requestsRes.data?.lessons) {
+                setLessonRequests(requestsRes.data.lessons);
+            }
+            if (tutorialsRes.success && Array.isArray(tutorialsRes.data)) {
+                setMyTutorials(tutorialsRes.data);
+            }
+            if (mentorRes.success && mentorRes.data) {
+                setMentorId(mentorRes.data.mentorId);
+            }
+        } catch (error) {
+            console.error('Failed to fetch dashboard data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
   const handleConfirmLesson = async (lessonId: number) => {
     try {
@@ -303,7 +308,7 @@ export default function MentorDashboardPage() {
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           <Link
-            to="/mentor/apply"
+            to={mentorId ? `/mentor/${mentorId}` : '/mentor/dashboard'}
             className="flex flex-col items-center gap-2 p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors"
           >
             <span className="material-symbols-outlined text-3xl text-slate-600 dark:text-slate-300">person</span>

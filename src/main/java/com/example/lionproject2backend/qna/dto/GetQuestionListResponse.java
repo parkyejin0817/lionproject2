@@ -15,5 +15,6 @@ public class GetQuestionListResponse {
     private Long questionId;
     private String title;
     private String content;
+    private int answerCount;
     private LocalDateTime createdAt;
 }

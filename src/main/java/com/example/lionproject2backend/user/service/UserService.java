@@ -1,5 +1,7 @@
 package com.example.lionproject2backend.user.service;
 
+import com.example.lionproject2backend.global.exception.custom.CustomException;
+import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import com.example.lionproject2backend.user.domain.User;
 import com.example.lionproject2backend.user.dto.GetUserDetailResponse;
 import com.example.lionproject2backend.user.dto.PutUserUpdateRequest;
@@ -23,7 +25,7 @@ public class UserService {
     public GetUserDetailResponse getUser(Long userId) {
         // 사용자 조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return new GetUserDetailResponse(
                 user.getId(),
@@ -43,12 +45,12 @@ public class UserService {
     public PutUserUpdateResponse updateUser(Long userId, PutUserUpdateRequest putUserUpdateRequest) {
         // 사용자 조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 닉네임 중복 체크
         if (putUserUpdateRequest.getNickname() != null && !putUserUpdateRequest.getNickname().equals(user.getNickname())) {
             if (userRepository.existsByNickname(putUserUpdateRequest.getNickname())) {
-                throw new IllegalArgumentException("이미 사용 중인 닉네임 입니다.");
+                throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
             }
         }
 

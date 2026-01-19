@@ -1,5 +1,7 @@
 package com.example.lionproject2backend.qna.service;
 
+import com.example.lionproject2backend.global.exception.custom.CustomException;
+import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import com.example.lionproject2backend.lesson.domain.Lesson;
 import com.example.lionproject2backend.lesson.repository.LessonRepository;
 import com.example.lionproject2backend.qna.domain.Answer;
@@ -33,11 +35,11 @@ public class QuestionService {
     public PostQuestionResponse postQuestion(Long lessonId, Long userId, PostQuestionRequest request) {
         // 존재하는 수업인지 확인
         Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.LESSON_NOT_FOUND));
 
         // 멘티인지 확인
         if (!lesson.getMentee().getId().equals(userId)) {
-            throw new IllegalArgumentException("질문 등록은 멘티만 가능합니다.");
+            throw new CustomException(ErrorCode.QUESTION_FORBIDDEN);
         }
 
         // 질문 생성
@@ -61,14 +63,14 @@ public class QuestionService {
 
     public List<GetQuestionListResponse> getQuestions(Long lessonId, Long userId) {
         Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.LESSON_NOT_FOUND));
 
         // 권한 확인
         boolean isMentee = lesson.getMentee().getId().equals(userId);
         boolean isMentor = lesson.getTutorial().getMentor().getUser().getId().equals(userId);
 
         if (!isMentee && !isMentor) {
-            throw new IllegalArgumentException("질문을 조회할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.QUESTION_FORBIDDEN);
         }
 
         // 질문 목록 조회
@@ -79,6 +81,7 @@ public class QuestionService {
                         q.getId(),
                         q.getTitle(),
                         q.getContent(),
+                        q.getAnswers().size(),
                         q.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
@@ -93,7 +96,7 @@ public class QuestionService {
     public GetQuestionDetailResponse getQuestion(Long questionId, Long userId) {
         // 질문 조회
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
         Lesson lesson = question.getLesson();
 
@@ -102,14 +105,18 @@ public class QuestionService {
         boolean isMentor = lesson.getTutorial().getMentor().getUser().getId().equals(userId);
 
         if (!isMentee && !isMentor) {
-            throw new IllegalArgumentException("질문을 조회할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.QUESTION_FORBIDDEN);
         }
         // 답변 목록 조회
         List<Answer> answers = answerRepository.findByQuestionId(questionId);
 
+        // 멘토 닉네임 가져오기
+        String mentorNickname = lesson.getTutorial().getMentor().getUser().getNickname();
+
         List<GetQuestionDetailResponse.AnswerDto> answerDtos = answers.stream()
                 .map(a -> new GetQuestionDetailResponse.AnswerDto(
                         a.getId(),
+                        mentorNickname,
                         a.getContent(),
                         a.getCreatedAt()
                 ))
@@ -135,13 +142,13 @@ public class QuestionService {
     public PostAnswerResponse postAnswer(Long questionId, Long userId, PostAnswerRequest request) {
         // 질문 조회
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
         Lesson lesson = question.getLesson();
 
         // 멘토인지 확인
         if (!lesson.getTutorial().getMentor().getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("답변은 멘토만 가능합니다.");
+            throw new CustomException(ErrorCode.ANSWER_FORBIDDEN);
         }
 
         // 답변 생성
@@ -171,6 +178,7 @@ public class QuestionService {
                         q.getId(),
                         q.getTitle(),
                         q.getContent(),
+                        answerRepository.countByQuestionId(q.getId()),
                         q.getCreatedAt()
                 ))
                 .collect(Collectors.toList());

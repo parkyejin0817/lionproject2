@@ -1,8 +1,9 @@
 package com.example.lionproject2backend.mentor.service;
 
+import com.example.lionproject2backend.global.exception.custom.CustomException;
+import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import com.example.lionproject2backend.mentor.domain.Mentor;
 import com.example.lionproject2backend.mentor.domain.MentorSkill;
-import com.example.lionproject2backend.mentor.domain.MentorStatus;
 import com.example.lionproject2backend.mentor.dto.*;
 import com.example.lionproject2backend.mentor.repository.MentorRepository;
 import com.example.lionproject2backend.mentor.repository.MentorSkillRepository;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +41,10 @@ public class MentorService {
     public PostMentorApplyResponse postMentor(Long userId, PostMentorApplyRequest request) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (mentorRepository.existsByUserId(userId)) {
-            throw new IllegalArgumentException("이미 멘토로 등록되어 있습니다.");
+            throw new CustomException(ErrorCode.ALREADY_MENTOR);
         }
 
         // 멘토 생성 (APPROVED)
@@ -64,7 +64,45 @@ public class MentorService {
         }
 
         return new PostMentorApplyResponse(savedMentor.getId(), "APPROVED");
+    }
 
+    /**
+     * 멘토 전체 조회
+     */
+    public List<GetMentorListResponse> getAllMentors() {
+        List<Mentor> mentors = mentorRepository.findAll();
+
+        return mentors.stream()
+                .map(mentor -> {
+                    // 1. 스킬 목록 추출
+                    List<String> skills = mentor.getMentorSkills().stream()
+                            .map(ms -> ms.getSkill().getSkillName())
+                            .toList();
+
+                    // 2. 리뷰 목록 조회
+                    List<Review> reviews = reviewRepository.findByMentorId(mentor.getId());
+
+                    // 3. 리뷰 개수
+                    int reviewCount = reviews.size();
+
+                    // 4. 평균 평점 계산 (리뷰 없으면 0.0)
+                    double averageRating = Math.round(
+                            reviews.stream()
+                                    .mapToInt(Review::getRating)
+                                    .average()
+                                    .orElse(0.0) * 10
+                    ) / 10.0;
+
+                    return new GetMentorListResponse(
+                            mentor.getId(),
+                            mentor.getUser().getNickname(),
+                            mentor.getCareer(),
+                            reviewCount,
+                            skills,
+                            averageRating
+                    );
+                })
+                .toList();
     }
 
     /**
@@ -74,16 +112,23 @@ public class MentorService {
     public GetMentorDetailResponse getMentor(Long mentorId) {
 
         Mentor mentor = mentorRepository.findById(mentorId)
-                .orElseThrow(() -> new IllegalArgumentException("멘토를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.MENTOR_NOT_FOUND));
 
         List<String> skills = mentorSkillRepository.findByMentorId(mentorId)
                 .stream()
                 .map(ms -> ms.getSkill().getSkillName())
-                .collect(Collectors.toList());
+                .toList();
 
         List<Tutorial> tutorials = tutorialRepository.findByMentorId(mentorId);
-        List<Review> reviews = reviewRepository.findByMentorId(mentorId);
 
+        // 튜토리얼 ID 목록으로 리뷰 조회
+        List<Long> tutorialIds = tutorials.stream()
+                .map(Tutorial::getId)
+                .toList();
+
+        List<Review> reviews = tutorialIds.isEmpty()
+                ? List.of()
+                : reviewRepository.findByTutorialIdInWithTutorial(tutorialIds);
         return GetMentorDetailResponse.from(mentor, skills, tutorials, reviews);
     }
 
@@ -92,47 +137,9 @@ public class MentorService {
      */
     public GetMentorDetailResponse getMentorByUserId(Long userId) {
         Mentor mentor = mentorRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("멘토 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.MENTOR_NOT_FOUND));
 
         return getMentor(mentor.getId());
     }
 
-    /**
-     * 멘토 검색 및 전체 조회
-     * 조건이 없으면 전체 조회
-     */
-    public List<GetMentorListResponse> searchMentors(MentorSearchCondition condition) {
-        List<Mentor> mentors = mentorRepository.searchMentors(condition);
-        return convertToResponse(mentors);
-    }
-
-    /**
-     * 멘토 리스트를 GetMentorListResponse DTO로 변환
-     */
-    private List<GetMentorListResponse> convertToResponse(List<Mentor> mentors) {
-        return mentors.stream()
-                .map(mentor -> {
-                    // 1. 스킬 목록 추출
-                    List<String> skills = mentor.getMentorSkills().stream()
-                            .map(ms -> ms.getSkill().getSkillName())
-                            .collect(Collectors.toList());
-
-                    // 2. 멘토가 가진 튜토리얼 중 최저 가격 계산 (메서드 참조 사용)
-                    int minPrice = mentor.getTutorials().stream()
-                            .mapToInt(Tutorial::getPrice)
-                            .min()
-                            .orElse(0);
-
-                    // 3. 6개의 인자를 사용하여 DTO 생성
-                    return new GetMentorListResponse(
-                            mentor.getId(),
-                            mentor.getUser().getNickname(),
-                            mentor.getCareer(),
-                            mentor.getReviewCount(),
-                            skills,
-                            minPrice
-                    );
-                })
-                .collect(Collectors.toList());
-    }
 }

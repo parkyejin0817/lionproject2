@@ -10,8 +10,8 @@
 
 | 구분 | 기능정의서 | 현재 화면 | 파일 | 수정 필요 |
 |------|-----------|----------|------|-----------|
-| 멘토 목록 | "멘토 목록 조회" | "나의 멘토 찾기" | MentorListPage.tsx | 표현 일관성 검토 |
-| 버튼 텍스트 | "수업 신청" | "세션 예약" | MentorListPage.tsx:215 | ✅ 수정 필요 |
+| 멘토 목록 | "멘토 목록 조회" | "나의 멘토 찾기" | TutorialListPage.tsx | 표현 일관성 검토 |
+| 버튼 텍스트 | "수업 신청" | "세션 예약" | TutorialListPage.tsx:215 | ✅ 수정 필요 |
 | 사용자 수 | "{mentor.reviewCount}명의 누적 수강생" | 리뷰 수를 수강생 수로 표시 | MentorDetailPage.tsx:295 | 의미 혼동 가능 |
 | 과외 용어 | "과외 (Tutorial)" | "튜토리얼" | MentorDetailPage.tsx:229 | 일관성 검토 |
 | 대시보드 | "수업 요청" | "새로운 요청" | MentorDashboardPage.tsx:103 | OK (비슷함) |
@@ -112,7 +112,7 @@ PENDING → (멘토 수락) → ACCEPTED → (결제 완료) → IN_PROGRESS →
 
 ### 5.2 버튼 텍스트 수정
 ```tsx
-// MentorListPage.tsx:215
+// TutorialListPage.tsx:215
 - 세션 예약
 + 수업 신청
 ```

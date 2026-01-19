@@ -33,6 +33,19 @@ export interface UserInfo {
   role: 'MENTEE' | 'MENTOR';
 }
 
+// 프로필 수정 요청 타입
+export interface UpdateProfileRequest {
+    nickname?: string;
+    introduction?: string;
+}
+
+// 프로필 수정 응답 타입
+export interface UpdateProfileResponse {
+    id: number;
+    nickname: string;
+    introduction: string | null;
+}
+
 /**
  * 회원가입
  */
@@ -128,4 +141,12 @@ export const checkEmailDuplicate = async (email: string): Promise<ApiResponse<Du
 export const checkNicknameDuplicate = async (nickname: string): Promise<ApiResponse<DuplicateCheckResponse>> => {
   const response = await api.get<ApiResponse<DuplicateCheckResponse>>(`/api/auth/check-nickname?nickname=${encodeURIComponent(nickname)}`);
   return response.data;
+};
+
+/**
+ * 내 프로필 수정
+ */
+export const updateProfile = async (data: UpdateProfileRequest): Promise<ApiResponse<UpdateProfileResponse>> => {
+    const response = await api.put<ApiResponse<UpdateProfileResponse>>('/api/user/me', data);
+    return response.data;
 };

@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 const howItWorksSteps = [
   {
     step: 1,
-    title: '멘토 검색 및 선택',
-    description: '기술 스택, 경력, 리뷰를 확인하고 나에게 맞는 멘토를 찾아보세요. 필터링으로 원하는 조건의 멘토를 빠르게 찾을 수 있습니다.',
+    title: '과외 검색 및 선택',
+    description: '기술 스택, 경력, 리뷰를 확인하고 나에게 맞는 과외를 찾아보세요. 필터링으로 원하는 조건의 과외를 빠르게 찾을 수 있습니다.',
     icon: 'search',
     color: 'bg-blue-500',
     details: [
-      '기술 스택별 멘토 필터링',
+      '기술 스택별 과외 필터링',
       '경력 및 리뷰 확인',
-      '멘토 프로필 상세 조회',
+      '과외, 멘토 상세 조회',
       '수업료 및 가능 시간 확인',
     ],
   },
@@ -64,8 +64,7 @@ const howItWorksSteps = [
     details: [
       'Q&A 게시판 질문 등록',
       '멘토의 상세한 답변',
-      '코드 첨부 기능',
-      '답변 채택 시스템',
+      '코드 첨부 기능'
     ],
   },
 ];
@@ -129,12 +128,12 @@ export default function HowItWorksPage() {
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
             복잡한 절차 없이 5단계로 시작하세요.
-            멘토 검색부터 수업 완료까지 DevSolve가 함께합니다.
+            과외 검색부터 수업 완료까지 DevSolve가 함께합니다.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild>
-              <Link to="/mentors">
-                멘토 찾아보기
+              <Link to="/tutorials">
+                과외 찾아보기
                 <span className="material-symbols-outlined ml-2">arrow_forward</span>
               </Link>
             </Button>
@@ -338,7 +337,7 @@ export default function HowItWorksPage() {
               <Link to="/signup">무료로 시작하기</Link>
             </Button>
             <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10" asChild>
-              <Link to="/mentors">멘토 둘러보기</Link>
+              <Link to="/tutorials">과외 둘러보기</Link>
             </Button>
           </div>
         </div>

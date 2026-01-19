@@ -39,10 +39,10 @@ export default function Navbar({ onToggleDarkMode }: NavbarProps) {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
             <Link
-              to="/mentors"
+              to="/tutorials"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
-              멘토 찾기
+              강의 찾기
             </Link>
             <Link
               to="/how-it-works"
@@ -81,7 +81,7 @@ export default function Navbar({ onToggleDarkMode }: NavbarProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link to="/mentors">멘토 찾기</Link>
+                  <Link to="/tutorials">강의 찾기</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/how-it-works">이용 방법</Link>

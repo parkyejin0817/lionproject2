@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     boolean existsByTutorialIdAndMenteeId(Long tutorialId, Long menteeId);
@@ -19,4 +21,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByMentorId(Long mentorId);
 
     List<Review> findByMenteeIdOrderByCreatedAtDesc(Long menteeId);
+
+    List<Review> findByTutorialId(Long tutorialId);
+
+    @Query("SELECT r FROM Review r JOIN FETCH r.tutorial WHERE r.tutorial.id IN :tutorialIds")
+    List<Review> findByTutorialIdInWithTutorial(@Param("tutorialIds") List<Long> tutorialIds);
 }

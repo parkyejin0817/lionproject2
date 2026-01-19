@@ -1,7 +1,9 @@
 package com.example.lionproject2backend.tutorial.service;
 
 import com.example.lionproject2backend.mentor.domain.Mentor;
+import com.example.lionproject2backend.review.domain.Review;
 import com.example.lionproject2backend.mentor.repository.MentorRepository;
+import com.example.lionproject2backend.review.repository.ReviewRepository;
 import com.example.lionproject2backend.skill.domain.Skill;
 import com.example.lionproject2backend.skill.repository.SkillRepository;
 import com.example.lionproject2backend.tutorial.domain.Tutorial;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -25,6 +28,7 @@ public class TutorialService {
     private final TutorialRepository tutorialRepository;
     private final MentorRepository mentorRepository;
     private final SkillRepository skillRepository;
+    private final ReviewRepository reviewRepository;
 
     public GetTutorialResponse createTutorial(Long userId, PostTutorialCreateRequest request) {
 
@@ -58,15 +62,83 @@ public class TutorialService {
         Tutorial tutorial = tutorialRepository.findById(tutorialId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TUTORIAL_NOT_FOUND));
 
-        return GetTutorialResponse.from(tutorial);
+        List<Review> reviews = reviewRepository.findByTutorialId(tutorialId);
+        int reviewCount = reviews.size();
+        double averageRating = calculateAverageRating(reviews);
+
+        return GetTutorialResponse.from(tutorial, reviewCount, averageRating);
     }
 
+    /**
+     * 튜토리얼 검색
+     * - 조건 없을 시 전체 조회
+     * - 스킬 필터: AND 조건 (모든 스킬 보유한 튜토리얼만)
+     * - 정렬: rating, reviewCount는 메모리 정렬
+     */
+
     @Transactional(readOnly = true)
-    public List<GetTutorialResponse> getAllTutorials() {
-        List<Tutorial> tutorials = tutorialRepository.findAll();
+    public List<GetTutorialResponse> searchTutorials(
+            List<String> skills,
+            String title,
+            Integer minPrice,
+            Integer maxPrice,
+            String sortBy
+    ) {
+        // 1. QueryDSL로 검색 (스킬, 제목, 가격 필터링)
+        List<Tutorial> tutorials = tutorialRepository.searchTutorials(
+                skills, title, minPrice, maxPrice, sortBy
+        );
+
+        // 2. rating, reviewCount 정렬은 메모리에서 처리
+        if ("rating".equals(sortBy)) {
+            // 평점 높은 순 정렬
+            tutorials = tutorials.stream()
+                    .sorted((t1, t2) -> {
+                        double avg1 = calculateAverageRating(t1.getId());
+                        double avg2 = calculateAverageRating(t2.getId());
+                        return Double.compare(avg2, avg1); // 내림차순
+                    })
+                    .toList();
+        } else if ("reviewCount".equals(sortBy)) {
+            // 리뷰 많은 순 정렬
+            tutorials = tutorials.stream()
+                    .sorted((t1, t2) -> {
+                        int count1 = reviewRepository.findByTutorialId(t1.getId()).size();
+                        int count2 = reviewRepository.findByTutorialId(t2.getId()).size();
+                        return Integer.compare(count2, count1); // 내림차순
+                    })
+                    .toList();
+        }
+
+        // 3. DTO 변환
         return tutorials.stream()
-                .map(GetTutorialResponse::from) // 단건 조회 방식과 동일하게 변환
+                .map(tutorial -> {
+                    List<Review> reviews = reviewRepository.findByTutorialId(tutorial.getId());
+                    int reviewCount = reviews.size();
+                    double averageRating = calculateAverageRating(reviews);
+                    return GetTutorialResponse.from(tutorial, reviewCount, averageRating);
+                })
                 .toList();
+    }
+
+    /**
+     * 튜토리얼 평균 평점 계산 (tutorialId로 조회)
+     */
+    private double calculateAverageRating(Long tutorialId) {
+        List<Review> reviews = reviewRepository.findByTutorialId(tutorialId);
+        return calculateAverageRating(reviews);
+    }
+
+    /**
+     * 튜토리얼 평균 평점 계산 (리뷰 목록으로 계산)
+     */
+    private double calculateAverageRating(List<Review> reviews) {
+        double avg = reviews.stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0.0);
+        // 소수점 첫째자리까지 반올림
+        return Math.round(avg * 10) / 10.0;
     }
 
 

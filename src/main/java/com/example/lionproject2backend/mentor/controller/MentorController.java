@@ -33,18 +33,12 @@ public class MentorController {
     }
 
     /**
-     * 멘토 목록 조회 + 검색
+     * 멘토 목록 조회 (전체)
      * GET /api/mentors
-     * 검색 조건 X = 최신 등록순
      */
-
     @GetMapping
-    public ResponseEntity<ApiResponse<List<GetMentorListResponse>>> getMentors(
-            @ModelAttribute MentorSearchCondition condition) {
-
-        System.out.println("검색 스킬 목록: " + condition.getSkills());
-
-        List<GetMentorListResponse> response = mentorService.searchMentors(condition);
+    public ResponseEntity<ApiResponse<List<GetMentorListResponse>>> getMentors() {
+        List<GetMentorListResponse> response = mentorService.getAllMentors();
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

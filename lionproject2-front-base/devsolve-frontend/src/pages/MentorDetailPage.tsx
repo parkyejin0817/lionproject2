@@ -69,10 +69,7 @@ export default function MentorDetailPage() {
     );
   }
 
-  // 평균 평점 계산
-  const averageRating = mentor.tutorials.length > 0
-    ? mentor.tutorials.reduce((sum, t) => sum + (t.rating || 0), 0) / mentor.tutorials.length
-    : 0;
+    const averageRating = mentor.averageRating || 0;
 
   return (
     <div className="pt-16">
@@ -234,43 +231,15 @@ export default function MentorDetailPage() {
               {/* Mentoring Info Card */}
               <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 sticky top-24">
                 <h2 className="text-slate-900 dark:text-white text-lg font-bold mb-4">멘토 정보</h2>
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <span className="material-symbols-outlined text-primary">verified</span>
-                    <div>
-                      <p className="text-sm font-bold dark:text-white">신분 및 경력 인증 완료</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">DevSolve 운영팀에서 검증된 멘토입니다.</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="material-symbols-outlined text-primary">groups</span>
-                    <div>
-                      <p className="text-sm font-bold dark:text-white">{mentor.reviewCount}명의 누적 수강생</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">지금까지 많은 학생들의 성장을 도왔습니다.</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="material-symbols-outlined text-primary">calendar_month</span>
-                    <div>
-                      <p className="text-sm font-bold dark:text-white">멘토 등록일</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{formatDate(mentor.createdAt)}</p>
-                    </div>
-                  </li>
-                </ul>
-                <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700">
-                  <p className="text-xs text-slate-400 mb-4">공유하기</p>
-                  <div className="flex gap-2">
-                    <button className="size-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-white hover:bg-primary/20 transition-colors">
-                      <span className="material-symbols-outlined text-xl">share</span>
-                    </button>
-                    <button className="size-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-white hover:bg-primary/20 transition-colors">
-                      <span className="material-symbols-outlined text-xl">link</span>
-                    </button>
-                    <button className="size-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-white hover:bg-primary/20 transition-colors">
-                      <span className="material-symbols-outlined text-xl">bookmark</span>
-                    </button>
-                  </div>
-                </div>
+                  <ul className="space-y-4">
+                      <li className="flex items-start gap-3">
+                          <span className="material-symbols-outlined text-primary">calendar_month</span>
+                          <div>
+                              <p className="text-sm font-bold dark:text-white">멘토 등록일</p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400">{formatDate(mentor.createdAt)}</p>
+                          </div>
+                      </li>
+                  </ul>
               </div>
 
               {/* Reviews */}

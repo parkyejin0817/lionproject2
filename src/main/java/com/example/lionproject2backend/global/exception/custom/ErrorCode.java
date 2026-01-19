@@ -52,6 +52,11 @@ public enum ErrorCode {
 	LESSON_INVALID_STATUS(HttpStatus.BAD_REQUEST, "LESSON_003", "수업 상태가 올바르지 않습니다."),
 	LESSON_PAST_DATE(HttpStatus.BAD_REQUEST, "LESSON_004", "과거 날짜로는 수업을 신청할 수 없습니다."),
 
+    // ============ QNA ============
+    QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "QNA_001", "질문을 찾을 수 없습니다."),
+    QUESTION_FORBIDDEN(HttpStatus.FORBIDDEN, "QNA_002", "해당 질문에 대한 권한이 없습니다."),
+    ANSWER_FORBIDDEN(HttpStatus.FORBIDDEN, "QNA_003", "답변은 멘토만 가능합니다."),
+
 	// REVIEW
 	REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW_001", "리뷰를 찾을 수 없습니다."),
 	REVIEW_ALREADY_EXISTS(HttpStatus.CONFLICT, "REVIEW_002","이미 해당 튜토리얼에 리뷰가 존재합니다."),

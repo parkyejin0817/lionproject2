@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
 import * as tutorialApi from '@/api/tutorial';
@@ -129,8 +130,8 @@ export default function TutorialDetailPage() {
         <div className="text-center">
           <span className="material-symbols-outlined text-6xl text-muted-foreground mb-4">error</span>
           <p className="text-lg text-muted-foreground">{error || '과외를 찾을 수 없습니다.'}</p>
-          <Button className="mt-4" onClick={() => navigate('/mentors')}>
-            멘토 목록으로
+            <Button className="mt-4" onClick={() => navigate('/tutorials')}>
+            과외 목록으로
           </Button>
         </div>
       </div>
@@ -144,7 +145,7 @@ export default function TutorialDetailPage() {
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/" className="hover:text-primary">홈</Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link to="/mentors" className="hover:text-primary">과외 찾기</Link>
+            <Link to="/tutorials" className="hover:text-primary">과외 찾기</Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
           <span className="text-foreground font-medium">과외 상세 정보</span>
         </nav>
@@ -370,6 +371,7 @@ export default function TutorialDetailPage() {
           <DialogContent className="max-w-[640px] p-0 gap-0 overflow-hidden">
             <DialogHeader className="px-8 pt-8 pb-4">
               <DialogTitle className="text-2xl font-bold">수업 신청하기</DialogTitle>
+              <DialogDescription className="sr-only">수업 신청 다이얼로그</DialogDescription>
             </DialogHeader>
 
             <div className="px-8 py-4 space-y-6">
