@@ -50,6 +50,9 @@ public class Settlement extends BaseEntity {
     @Column(name = "settlement_amount", nullable = false)
     private int settlementAmount;
 
+    @Column(name = "refund_amount", nullable = false)
+    private Integer refundAmount;
+
     @Column(name = "final_settlement_amount", nullable = false)
     private int finalSettlementAmount;
 
@@ -67,18 +70,24 @@ public class Settlement extends BaseEntity {
      * @param settlementPeriod 정산 기간
      * @param totalAmount 총 결제 금액
      */
-    public static Settlement create(Mentor mentor,
-                                    YearMonth settlementPeriod,
-                                    int totalAmount,
-                                    int platformFee,
-                                    int settlementAmount) {
+    public static Settlement create(
+            Mentor mentor,
+            YearMonth settlementPeriod,
+            int totalAmount,
+            int platformFee,
+            int settlementAmount,
+            int refundAmount
+    ) {
         Settlement settlement = new Settlement();
         settlement.mentor = mentor;
         settlement.settlementPeriod = settlementPeriod;
         settlement.totalAmount = totalAmount;
         settlement.platformFee = platformFee;
         settlement.settlementAmount = settlementAmount;
-        settlement.finalSettlementAmount = settlement.settlementAmount;
+
+        settlement.refundAmount = refundAmount;
+        settlement.finalSettlementAmount = settlementAmount - refundAmount;
+
         settlement.status = SettlementStatus.PENDING;
         return settlement;
     }
@@ -91,7 +100,8 @@ public class Settlement extends BaseEntity {
         this.settledAt = LocalDateTime.now();
     }
 
-    public void applyFinalAmount(int finalAmount) {
-        this.finalSettlementAmount = finalAmount;
+    public void applyRefund(int refundAmount) {
+        this.refundAmount += refundAmount;
+        this.finalSettlementAmount -= refundAmount;
     }
 }

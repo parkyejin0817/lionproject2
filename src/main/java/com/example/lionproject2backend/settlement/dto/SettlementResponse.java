@@ -22,6 +22,7 @@ public class SettlementResponse {
     private int totalAmount;
     private int platformFee;
     private int settlementAmount;
+    private int refundAmount;
     private int finalSettlementAmount;
     private SettlementStatus status;
     private LocalDateTime settledAt;
@@ -36,6 +37,7 @@ public class SettlementResponse {
                 .totalAmount(settlement.getTotalAmount())
                 .platformFee(settlement.getPlatformFee())
                 .settlementAmount(settlement.getSettlementAmount())
+                .refundAmount(settlement.getRefundAmount())
                 .finalSettlementAmount(settlement.getFinalSettlementAmount())
                 .status(settlement.getStatus())
                 .settledAt(settlement.getSettledAt())

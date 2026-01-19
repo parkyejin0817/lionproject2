@@ -62,10 +62,7 @@ public class Mentor extends BaseEntity {
     // 멘토 거절
     public void reject(String reason) {
         this.mentorStatus = MentorStatus.REJECTED;
-
     }
-
-
     // =============== 가용 시간 관련 메서드 =============== //
 
     /**

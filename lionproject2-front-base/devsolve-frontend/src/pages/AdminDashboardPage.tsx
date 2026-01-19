@@ -86,6 +86,30 @@ export default function AdminDashboardPage() {
                                 )}
                             </div>
                         </Link>
+
+                        {/* 환불 관리 */}
+                        <Link to="/admin/refunds">
+                            <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                                isActive('/admin/refunds')
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                            }`}>
+                                <span className="material-symbols-outlined text-xl">undo</span>
+                                <span className="font-medium">환불 관리</span>
+                            </div>
+                        </Link>
+
+                        {/* 정산 관리 */}
+                        <Link to="/admin/settlements">
+                            <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                                isActive('/admin/settlements')
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                            }`}>
+                                <span className="material-symbols-outlined text-xl">receipt_long</span>
+                                <span className="font-medium">정산 관리</span>
+                            </div>
+                        </Link>
                     </nav>
                 </div>
             </aside>

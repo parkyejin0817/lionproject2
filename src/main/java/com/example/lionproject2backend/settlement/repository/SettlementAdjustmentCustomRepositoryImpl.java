@@ -24,7 +24,10 @@ public class SettlementAdjustmentCustomRepositoryImpl implements SettlementAdjus
                 .where(
                         settlementAdjustment.mentor.eq(mentor),
                         settlementAdjustment.targetPeriod.loe(settlementPeriod),
-                        settlementAdjustment.status.ne(AdjustmentStatus.APPLIED)
+                        settlementAdjustment.status.in(
+                                AdjustmentStatus.PENDING,
+                                AdjustmentStatus.PARTIALLY_APPLIED
+                        )
                 )
                 .orderBy(
                         settlementAdjustment.occurredAt.asc()
