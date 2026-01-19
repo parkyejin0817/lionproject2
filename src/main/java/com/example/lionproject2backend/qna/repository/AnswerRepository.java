@@ -8,4 +8,6 @@ import java.util.List;
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     //특정 질문 답변 목록 조회
     List<Answer> findByQuestionId(Long questionId);
+
+    int countByQuestionId(Long questionId);
 }

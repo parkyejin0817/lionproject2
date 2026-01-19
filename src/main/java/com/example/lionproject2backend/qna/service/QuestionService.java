@@ -81,6 +81,7 @@ public class QuestionService {
                         q.getId(),
                         q.getTitle(),
                         q.getContent(),
+                        q.getAnswers().size(),
                         q.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
@@ -109,9 +110,13 @@ public class QuestionService {
         // 답변 목록 조회
         List<Answer> answers = answerRepository.findByQuestionId(questionId);
 
+        // 멘토 닉네임 가져오기
+        String mentorNickname = lesson.getTutorial().getMentor().getUser().getNickname();
+
         List<GetQuestionDetailResponse.AnswerDto> answerDtos = answers.stream()
                 .map(a -> new GetQuestionDetailResponse.AnswerDto(
                         a.getId(),
+                        mentorNickname,
                         a.getContent(),
                         a.getCreatedAt()
                 ))
@@ -173,6 +178,7 @@ public class QuestionService {
                         q.getId(),
                         q.getTitle(),
                         q.getContent(),
+                        answerRepository.countByQuestionId(q.getId()),
                         q.getCreatedAt()
                 ))
                 .collect(Collectors.toList());

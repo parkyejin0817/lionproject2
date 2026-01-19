@@ -4,6 +4,7 @@ import type { ApiResponse } from './client';
 // 질문 타입
 export interface Question {
   id: number;
+  questionId?: number;
   lessonId: number;
   menteeId: number;
   menteeNickname: string;
@@ -97,9 +98,11 @@ export const acceptAnswer = async (answerId: number): Promise<ApiResponse<Answer
 };
 
 /**
- * 내 질문 목록 조회 (멘티)
+ * 질문 목록 조회
  */
-export const getMyQuestions = async (): Promise<ApiResponse<Question[]>> => {
-  const response = await api.get<ApiResponse<Question[]>>('/api/questions/my');
-  return response.data;
+export const getMyQuestions = async (role?: string): Promise<ApiResponse<Question[]>> => {
+    const response = await api.get<ApiResponse<Question[]>>('/api/questions/my', {
+        params: { role: role || 'MENTEE' }
+    });
+    return response.data;
 };

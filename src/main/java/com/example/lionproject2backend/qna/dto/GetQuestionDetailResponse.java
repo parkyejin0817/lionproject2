@@ -27,7 +27,8 @@ public class GetQuestionDetailResponse {
     @Getter
     @AllArgsConstructor
     public static class AnswerDto {
-        private Long answerId;
+        private Long id;
+        private String mentorNickname;
         private String content;
         private LocalDateTime createdAt;
     }
