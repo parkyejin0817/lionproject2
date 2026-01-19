@@ -208,7 +208,12 @@ public class TutorialService {
 
         List<Tutorial> tutorials = tutorialRepository.findByMentorId(mentor.getId());
         return tutorials.stream()
-                .map(GetTutorialResponse::from)
+                .map(tutorial -> {
+                    List<Review> reviews = reviewRepository.findByTutorialId(tutorial.getId());
+                    int reviewCount = reviews.size();
+                    double averageRating = calculateAverageRating(reviews);
+                    return GetTutorialResponse.from(tutorial, reviewCount, averageRating);
+                })
                 .toList();
     }
 
