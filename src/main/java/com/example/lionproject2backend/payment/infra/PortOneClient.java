@@ -26,4 +26,13 @@ public class PortOneClient {
         }
         return response;
     }
+
+    public void cancelPayment(String paymentId, String reason) {
+        restClient.post()
+            .uri("/payments/{paymentId}/cancel", paymentId)
+            .header("Authorization", "PortOne " + portOneProperties.apiSecret())
+            .body(Map.of("reason", reason))
+            .retrieve()
+            .toBodilessEntity();
+    }
 }

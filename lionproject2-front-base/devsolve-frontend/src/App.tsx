@@ -11,6 +11,7 @@ import MentorDashboardPage from './pages/MentorDashboardPage';
 import MenteeDashboardPage from './pages/MenteeDashboardPage';
 import PaymentPage from './pages/PaymentPage';
 import PaymentHistoryPage from './pages/PaymentHistoryPage';
+import AdminRefundPage from './pages/AdminRefundPage';
 import QuestionCreatePage from './pages/QuestionCreatePage';
 import QuestionDetailPage from './pages/QuestionDetailPage';
 import TutorialFormPage from './pages/TutorialFormPage';
@@ -59,6 +60,7 @@ function App() {
           <Route path="/payment/:tutorialId" element={<PaymentPage />} />
           <Route path="/payment/complete" element={<PaymentCompletePage />} />
           <Route path="/mypage/payments" element={<PaymentHistoryPage />} />
+          <Route path="/admin/refunds" element={<AdminRefundPage />} />
         </Route>
         </Routes>
       </AuthProvider>

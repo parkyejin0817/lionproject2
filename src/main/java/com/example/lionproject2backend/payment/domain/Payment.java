@@ -7,8 +7,6 @@ import com.example.lionproject2backend.tutorial.domain.Tutorial;
 import com.example.lionproject2backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,7 +55,6 @@ public class Payment extends BaseEntity {
     @Column(name = "refunded_at")
     private LocalDateTime refundedAt;
 
-    // 생성 메서드
     public static Payment create(Tutorial tutorial, User mentee, int count) {
         Payment payment = new Payment();
         payment.tutorial = tutorial;
@@ -68,7 +65,6 @@ public class Payment extends BaseEntity {
         return payment;
     }
 
-    // 결제 완료 처리
     public void complete(String impUid, String merchantUid) {
         if (this.status != PaymentStatus.PENDING) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_COMPLETE);
@@ -79,7 +75,6 @@ public class Payment extends BaseEntity {
         this.paidAt = LocalDateTime.now();
     }
 
-    // 결제 취소
     public void cancel() {
         if (this.status == PaymentStatus.PAID) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_CANCEL);
@@ -87,10 +82,6 @@ public class Payment extends BaseEntity {
         this.status = PaymentStatus.CANCELLED;
     }
 
-    /**
-     * 환불 신청 (멘티가 환불 요청)
-     * 상태만 REFUND_REQUESTED로 변경, 실제 환불은 관리자 승인 후 처리
-     */
     public void requestRefund() {
         if (this.status != PaymentStatus.PAID) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_REQUEST_REFUND);
@@ -98,21 +89,13 @@ public class Payment extends BaseEntity {
         this.status = PaymentStatus.REFUND_REQUESTED;
     }
 
-    /**
-     * 환불 거절 (관리자가 환불 신청 거절)
-     * 상태를 원래대로 복구 (PAID)
-     */
     public void rejectRefund() {
         if (this.status != PaymentStatus.REFUND_REQUESTED) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_REJECT_REFUND);
         }
-        this.status = PaymentStatus.PAID;
+        this.status = PaymentStatus.REFUND_REJECTED;
     }
 
-    /**
-     * 환불 신청 취소
-     * 상태를 원래대로 복구 (PAID)
-     */
     public void cancelRefundRequest() {
         if (this.status != PaymentStatus.REFUND_REQUESTED) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_CANCEL_REFUND_REQUEST);
@@ -120,25 +103,16 @@ public class Payment extends BaseEntity {
         this.status = PaymentStatus.PAID;
     }
 
-    /**
-     * 환불 금액 검증 (상태 변경 없음)
-     * @param refundAmount 환불할 금액 (전체 결제 금액이어야 함)
-     */
     public void validateRefund(int refundAmount) {
         if (this.status != PaymentStatus.REFUND_REQUESTED) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_PROCESS_REFUND);
         }
-        
+
         if (refundAmount != this.amount) {
             throw new CustomException(ErrorCode.PAYMENT_INVALID_REFUND_AMOUNT);
         }
     }
 
-    /**
-     * 환불 처리 (상태 변경)
-     * validateRefund()로 검증 완료 후 호출해야 함
-     * @param refundAmount 환불할 금액 (전체 결제 금액)
-     */
     public void applyRefund(int refundAmount) {
         this.refundedAmount = refundAmount;
         this.refundedAt = LocalDateTime.now();
