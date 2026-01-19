@@ -147,6 +147,7 @@ public class PaymentService {
      * 결제 상세 조회 (모든 상태)
      */
     @Transactional(readOnly = true)
+    
     public GetPaymentDetailResponse getPaymentDetail(Long paymentId, Long userId) {
         Payment payment = paymentRepository.findByIdAndMenteeId(paymentId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
@@ -241,6 +242,11 @@ public class PaymentService {
          * 환불 실패 시 커스텀 에러 발생하도록 !
          */
 
+        if (payment.getImpUid() == null) {
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_PROCESS_REFUND);
+        }
+
+        portOneClient.cancelPayment(payment.getImpUid(), "관리자 승인 환불");
         payment.applyRefund(refundAmount);
         /**
          * 티켓 상태 변경?
@@ -290,6 +296,23 @@ public class PaymentService {
         List<Payment> refundRequests = paymentRepository.findAllRefundRequests();
 
         return refundRequests.stream()
+                .map(GetPaymentListResponse::from)
+                .toList();
+    }
+
+    /**
+     * 결제 내역 전체 조회 (멘티 마이페이지용)
+     */
+    @Transactional(readOnly = true)
+    public List<GetPaymentListResponse> getMyPaymentList(Long userId) {
+        Page<Payment> payments = paymentRepository.findByMenteeIdWithFilters(
+                userId,
+                null,
+                null,
+                org.springframework.data.domain.Pageable.unpaged()
+        );
+
+        return payments.stream()
                 .map(GetPaymentListResponse::from)
                 .toList();
     }

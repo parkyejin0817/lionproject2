@@ -1,51 +1,22 @@
-import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import type { Tutorial, Mentor, User } from '../types';
+import * as tutorialApi from '@/api/tutorial';
+import type { Tutorial } from '@/api/tutorial';
 
-// 결제할 튜토리얼 목 데이터
-const mockTutorial: Tutorial & { mentor: Mentor & { user: User } } = {
-  id: 1,
-  mentorId: 1,
-  title: 'React 성능 최적화 마스터 클래스',
-  description: 'PROFESSIONAL COURSE',
-  price: 55000,
-  duration: 60,
-  rating: 4.9,
-  status: 'ACTIVE',
-  skills: [
-    { id: 1, skillName: 'React' },
-    { id: 2, skillName: 'Performance' },
-  ],
-  createdAt: '2023-06-01T00:00:00',
-  updatedAt: '2024-01-01T00:00:00',
-  mentor: {
-    id: 1,
-    userId: 1,
-    career: '7년차 프론트엔드 개발자',
-    status: 'APPROVED',
-    reviewCount: 128,
-    skills: [],
-    createdAt: '2023-01-01T00:00:00',
-    user: {
-      id: 1,
-      email: 'devmaster@example.com',
-      nickname: 'DevMaster',
-      role: 'MENTOR',
-      createdAt: '2023-01-01T00:00:00',
-    },
-  },
-};
+const API_BASE_URL = 'http://localhost:8080';
 
-// 포트원 설정 (실제 배포 시 환경 변수로 관리)
-const PORTONE_CONFIG = {
-  storeId: 'store-4ff4af41-85e3-4559-8eb8-0d08a2c6ceec',  // 백엔드에서 제공받은 실제 storeId로 변경 필요
-  channelKey: 'channel-key-9987f423-e02d-4c2f-92a0-be0bab348891', // 백엔드에서 제공받은 실제 channelKey로 변경 필요
+type PortOneConfig = {
+  storeId: string;
+  channelKey: string;
 };
 
 export default function PaymentPage() {
-  useParams(); // tutorialId를 사용할 예정
+  const { tutorialId } = useParams<{ tutorialId: string }>();
   const navigate = useNavigate();
-  const tutorial = mockTutorial;
+
+  const [tutorial, setTutorial] = useState<Tutorial | null>(null);
+  const [isTutorialLoading, setIsTutorialLoading] = useState(true);
+  const [tutorialError, setTutorialError] = useState<string | null>(null);
 
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'transfer' | 'easy'>('card');
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -53,34 +24,88 @@ export default function PaymentPage() {
   const [lessonCount, setLessonCount] = useState(4);
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [config, setConfig] = useState<PortOneConfig | null>(null);
+  const [configError, setConfigError] = useState<string | null>(null);
 
-  // 수업 횟수 제한
+  // 결제 설정(storeId/channelKey) 로드
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/payments/config`);
+        if (!res.ok) {
+          throw new Error(`config load failed: ${res.status}`);
+        }
+        const json = await res.json();
+        const data = json?.data ?? json;
+        if (!data?.storeId || !data?.channelKey) {
+          throw new Error('config missing storeId/channelKey');
+        }
+        setConfig({ storeId: data.storeId, channelKey: data.channelKey });
+      } catch (error) {
+        console.error('결제 설정 로딩 실패:', error);
+        setConfigError('결제 설정을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+      }
+    };
+
+    fetchConfig();
+  }, []);
+
+  // 튜토리얼 상세 로드
+  useEffect(() => {
+    const fetchTutorial = async () => {
+      if (!tutorialId) {
+        setTutorialError('튜토리얼 정보를 불러올 수 없습니다.');
+        setIsTutorialLoading(false);
+        return;
+      }
+
+      setIsTutorialLoading(true);
+      setTutorialError(null);
+      try {
+        const res = await tutorialApi.getTutorial(Number(tutorialId));
+        if (res.success && res.data) {
+          setTutorial(res.data);
+        } else {
+          setTutorialError('튜토리얼 정보를 불러올 수 없습니다.');
+        }
+      } catch (error) {
+        console.error('튜토리얼 로딩 실패:', error);
+        setTutorialError('튜토리얼 정보를 불러오지 못했습니다.');
+      } finally {
+        setIsTutorialLoading(false);
+      }
+    };
+
+    fetchTutorial();
+  }, [tutorialId]);
+
   const MIN_LESSON_COUNT = 1;
   const MAX_LESSON_COUNT = 12;
 
-  // 금액 계산
-  const orderAmount = tutorial.price * lessonCount;
+  const tutorialPrice = tutorial?.price ?? 0;
+  const orderAmount = tutorialPrice * lessonCount;
   const couponDiscount = appliedCoupon?.discount || 0;
   const pointUsed = 0;
   const totalAmount = orderAmount - couponDiscount - pointUsed;
+  const mentorName = tutorial?.mentorNickname ?? '멘토';
 
-  // 수업 횟수 증감
+  // 수업 횟수 증가
   const handleIncrease = () => {
     if (lessonCount < MAX_LESSON_COUNT) {
       setLessonCount(prev => prev + 1);
     }
   };
 
+  // 수업 횟수 감소
   const handleDecrease = () => {
     if (lessonCount > MIN_LESSON_COUNT) {
       setLessonCount(prev => prev - 1);
     }
   };
 
-  // 쿠폰 조회
+  // 쿠폰 조회 및 적용(임시)
   const handleCouponLookup = () => {
     if (couponCode.trim()) {
-      // Mock 쿠폰 적용
       if (couponCode === 'WELCOME20') {
         setAppliedCoupon({ code: couponCode, discount: 20000 });
         alert('쿠폰이 적용되었습니다!');
@@ -88,115 +113,171 @@ export default function PaymentPage() {
         alert('유효하지 않은 쿠폰 코드입니다.');
       }
     } else {
-      // 보유 쿠폰 조회 시뮬레이션
       alert('보유 중인 쿠폰 2개가 있습니다.');
     }
   };
 
-  // 결제 수단 매핑
+  // 결제 수단을 PortOne 값으로 매핑
   const getPayMethod = () => {
     switch (paymentMethod) {
-      case 'card': return 'CARD';
-      case 'transfer': return 'TRANSFER';
-      case 'easy': return 'EASY_PAY';
-      default: return 'CARD';
+      case 'card':
+        return 'CARD';
+      case 'transfer':
+        return 'TRANSFER';
+      case 'easy':
+        return 'EASY_PAY';
+      default:
+        return 'CARD';
     }
   };
 
+  // 결제 생성 → PortOne 결제 → 서버 검증
   const handlePayment = async () => {
     if (!agreeTerms) {
       alert('이용약관에 동의해주세요.');
       return;
     }
 
+    if (!tutorial) {
+      alert('튜토리얼 정보를 불러오지 못했습니다.');
+      return;
+    }
+
+    if (configError || !config) {
+      alert(configError ?? '결제 설정을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+
+    const resolvedTutorialId = Number(tutorialId);
+    if (!resolvedTutorialId) {
+      alert('유효하지 않은 튜토리얼 ID입니다.');
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
-      // 1. 주문 번호 생성 (LION + 타임스탬프)
-      const orderPaymentId = "LION-" + new Date().getTime();
-      const orderAmount = totalAmount;
-
-      // 2. 포트원 결제창 호출
-      const response = await PortOne.requestPayment({
-        storeId: PORTONE_CONFIG.storeId,
-        channelKey: PORTONE_CONFIG.channelKey,
-        paymentId: orderPaymentId,
-        orderName: tutorial.title,
-        totalAmount: orderAmount,
-        currency: "CURRENCY_KRW",
-        payMethod: getPayMethod() as 'CARD' | 'TRANSFER' | 'EASY_PAY',
-        customer: {
-          fullName: "사용자",  // 실제 서비스에선 로그인된 유저 정보 사용
-          phoneNumber: "010-0000-0000",
-          email: "user@example.com",
+      const createRes = await fetch(`${API_BASE_URL}/api/tutorials/${resolvedTutorialId}/payments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        windowType: {
-          pc: "IFRAME"
-        }
+        body: JSON.stringify({
+          count: lessonCount,
+        }),
       });
 
-      // 3. 결제창 단계에서 에러가 난 경우 처리
-      if (response.code != null) {
-        alert("결제 실패: " + response.message);
+      if (!createRes.ok) {
+        const errorText = await createRes.text();
+        alert(`결제 생성 실패: ${errorText}`);
         setIsProcessing(false);
         return;
       }
 
-      // 4. 백엔드로 검증 및 DB 저장 요청
-      // 백엔드 PaymentVerifyRequest: impUid 필드만 필요 (@NotBlank)
-      const verifyRes = await fetch("/api/payments/verify", {
-        method: "POST",
+      const createJson = await createRes.json();
+      const paymentData = createJson?.data ?? createJson;
+
+      if (!paymentData?.paymentId) {
+        alert('결제 생성 응답이 올바르지 않습니다.');
+        setIsProcessing(false);
+        return;
+      }
+
+      const orderPaymentId = String(paymentData.paymentId);
+      const paymentAmount = paymentData.amount ?? totalAmount;
+
+      const response = await PortOne.requestPayment({
+        storeId: config.storeId,
+        channelKey: config.channelKey,
+        paymentId: orderPaymentId,
+        orderName: tutorial.title,
+        totalAmount: paymentAmount,
+        currency: 'CURRENCY_KRW',
+        payMethod: getPayMethod() as 'CARD' | 'TRANSFER' | 'EASY_PAY',
+        customer: {
+          fullName: '사용자',
+          phoneNumber: '010-0000-0000',
+          email: 'user@example.com',
+        },
+        windowType: {
+          pc: 'IFRAME',
+        },
+      });
+
+      if (response.code != null) {
+        alert('결제 실패: ' + response.message);
+        setIsProcessing(false);
+        return;
+      }
+
+      const verifyRes = await fetch(`${API_BASE_URL}/api/payments/${paymentData.paymentId}/verify`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          impUid: response.paymentId,  // PortOne paymentId를 impUid로 전송
-        })
+          impUid: response.paymentId,
+        }),
       });
 
       if (verifyRes.ok) {
-        // 결제 성공 - 완료 페이지로 이동
         navigate('/payment/complete', {
           state: {
-            paymentId: response.paymentId,
+            paymentId: paymentData.paymentId,
             tutorialTitle: tutorial.title,
-            amount: totalAmount,
-            mentorName: tutorial.mentor.user.nickname,
-          }
+            amount: paymentAmount,
+            mentorName,
+          },
         });
       } else {
         const errorText = await verifyRes.text();
-        alert("서버 검증 실패: " + errorText);
+        alert('서버 검증 실패: ' + errorText);
       }
-
     } catch (error) {
-      console.error("결제 프로세스 에러:", error);
-      alert("결제 중 오류가 발생했습니다.");
+      console.error('결제 프로세스 에러:', error);
+      alert('결제 중 오류가 발생했습니다.');
     } finally {
       setIsProcessing(false);
     }
   };
 
+  const canSubmitPayment = agreeTerms && !isProcessing && !configError && !!config && !!tutorial;
+
+  if (isTutorialLoading) {
+    return (
+      <div className="pt-16 min-h-screen flex items-center justify-center">
+        <span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span>
+      </div>
+    );
+  }
+
+  if (tutorialError || !tutorial) {
+    return (
+      <div className="pt-16 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <span className="material-symbols-outlined text-6xl text-slate-300 dark:text-slate-600 mb-4">error</span>
+          <p className="text-lg text-slate-500 dark:text-slate-400">{tutorialError ?? '튜토리얼 정보를 불러올 수 없습니다.'}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="pt-16">
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-black text-slate-900 dark:text-white">결제하기</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-2">수업 내용을 확인하고 결제를 진행해주세요.</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left: Payment Form */}
           <div className="lg:col-span-2 space-y-6">
-            {/* 수업 정보 */}
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">info</span>
                 수업 정보
               </h2>
               <div className="flex gap-5">
-                {/* 썸네일 이미지 */}
                 <div className="w-32 h-32 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
                   <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 text-5xl">school</span>
                 </div>
@@ -206,11 +287,11 @@ export default function PaymentPage() {
                   <div className="flex flex-col gap-2 mt-4 text-sm text-slate-600 dark:text-slate-400">
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-base">person</span>
-                      <span>멘토: <strong className="text-slate-900 dark:text-white">{tutorial.mentor.user.nickname}</strong></span>
+                      <span>멘토: <strong className="text-slate-900 dark:text-white">{mentorName}</strong></span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-base">payments</span>
-                      <span>회당 수업료: <strong className="text-slate-900 dark:text-white">₩{tutorial.price.toLocaleString()}</strong></span>
+                      <span>회당 수업료: <strong className="text-slate-900 dark:text-white">₩{tutorialPrice.toLocaleString()}</strong></span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-base">schedule</span>
@@ -218,7 +299,6 @@ export default function PaymentPage() {
                     </div>
                   </div>
 
-                  {/* 수업 횟수 선택 */}
                   <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
@@ -249,7 +329,6 @@ export default function PaymentPage() {
               </div>
             </div>
 
-            {/* 결제 수단 선택 */}
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">credit_card</span>
@@ -294,7 +373,6 @@ export default function PaymentPage() {
               </div>
             </div>
 
-            {/* 할인 및 쿠폰 */}
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">confirmation_number</span>
@@ -336,7 +414,6 @@ export default function PaymentPage() {
             </div>
           </div>
 
-          {/* Right: Order Summary */}
           <div>
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 sticky top-24 shadow-lg">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">최종 결제 금액</h2>
@@ -344,7 +421,7 @@ export default function PaymentPage() {
               <div className="space-y-4 pb-6 border-b border-slate-200 dark:border-slate-700">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-slate-600 dark:text-slate-400">
-                    주문 금액 (₩{tutorial.price.toLocaleString()} × {lessonCount}회)
+                    주문 금액 (₩{tutorialPrice.toLocaleString()} × {lessonCount}회)
                   </span>
                   <span className="text-slate-900 dark:text-white font-semibold">
                     ₩{orderAmount.toLocaleString()}
@@ -369,7 +446,6 @@ export default function PaymentPage() {
                 </span>
               </div>
 
-              {/* 약관 동의 */}
               <label className="flex items-start gap-3 cursor-pointer mb-5 p-3 rounded-lg bg-slate-50 dark:bg-slate-900">
                 <input
                   type="checkbox"
@@ -386,9 +462,9 @@ export default function PaymentPage() {
 
               <button
                 onClick={handlePayment}
-                disabled={!agreeTerms || isProcessing}
+                disabled={!canSubmitPayment}
                 className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 ${
-                  agreeTerms && !isProcessing
+                  canSubmitPayment
                     ? 'bg-primary text-white hover:brightness-110 shadow-lg shadow-primary/30'
                     : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
                 }`}

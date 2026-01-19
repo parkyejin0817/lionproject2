@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
 import * as tutorialApi from '@/api/tutorial';
@@ -370,6 +371,7 @@ export default function TutorialDetailPage() {
           <DialogContent className="max-w-[640px] p-0 gap-0 overflow-hidden">
             <DialogHeader className="px-8 pt-8 pb-4">
               <DialogTitle className="text-2xl font-bold">수업 신청하기</DialogTitle>
+              <DialogDescription className="sr-only">수업 신청 다이얼로그</DialogDescription>
             </DialogHeader>
 
             <div className="px-8 py-4 space-y-6">

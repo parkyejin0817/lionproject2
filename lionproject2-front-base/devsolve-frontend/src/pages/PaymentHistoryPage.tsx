@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import * as paymentApi from '@/api/payment';
@@ -28,10 +28,28 @@ function getStatusBadge(status: PaymentStatus) {
           결제대기
         </span>
       );
+    case 'REFUND_REQUESTED':
+      return (
+        <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold px-3 py-1 rounded-full">
+          환불요청
+        </span>
+      );
+    case 'REFUNDED':
+      return (
+        <span className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold px-3 py-1 rounded-full">
+          환불완료
+        </span>
+      );
+    case 'REFUND_REJECTED':
+      return (
+        <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-3 py-1 rounded-full">
+          환불거절
+        </span>
+      );
     case 'CANCELLED':
       return (
         <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-3 py-1 rounded-full">
-          환불완료
+          결제취소
         </span>
       );
     default:
@@ -45,7 +63,8 @@ export default function PaymentHistoryPage() {
 
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'paid' | 'cancelled'>('all');
+  const [filter, setFilter] = useState<'all' | 'paid' | 'refundRequested' | 'refunded'>('all');
+  const [refundingId, setRefundingId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -72,6 +91,24 @@ export default function PaymentHistoryPage() {
     }
   };
 
+  const handleRefundRequest = async (paymentId: number) => {
+    if (!confirm('환불 신청을 진행할까요? 티켓을 사용했다면 환불이 불가합니다.')) return;
+    setRefundingId(paymentId);
+    try {
+      const res = await paymentApi.requestRefund(paymentId);
+      if (res.success) {
+        await fetchPayments();
+      } else {
+        alert('환불 신청에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Failed to request refund:', error);
+      alert('환불 신청 중 오류가 발생했습니다.');
+    } finally {
+      setRefundingId(null);
+    }
+  };
+
   if (authLoading || isLoading) {
     return (
       <div className="pt-16 min-h-screen flex items-center justify-center">
@@ -83,7 +120,10 @@ export default function PaymentHistoryPage() {
   const filteredPayments = payments.filter((payment) => {
     if (filter === 'all') return true;
     if (filter === 'paid') return payment.status === 'PAID';
-    if (filter === 'cancelled') return payment.status === 'CANCELLED';
+    if (filter === 'refundRequested') return payment.status === 'REFUND_REQUESTED';
+    if (filter === 'refunded') {
+      return payment.status === 'REFUNDED' || payment.status === 'REFUND_REJECTED' || payment.status === 'CANCELLED';
+    }
     return true;
   });
 
@@ -92,18 +132,17 @@ export default function PaymentHistoryPage() {
     .reduce((sum, p) => sum + p.amount, 0);
 
   const totalRefunded = payments
-    .filter((p) => p.status === 'CANCELLED')
+    .filter((p) => p.status === 'REFUNDED')
     .reduce((sum, p) => sum + p.amount, 0);
 
   return (
     <div className="pt-16">
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">결제 내역</h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-              수업 신청 및 결제 내역을 확인하세요
+              수업 신청 및 결제 내역을 확인하세요.
             </p>
           </div>
           <Link
@@ -115,7 +154,6 @@ export default function PaymentHistoryPage() {
           </Link>
         </div>
 
-        {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3 mb-2">
@@ -134,7 +172,7 @@ export default function PaymentHistoryPage() {
               <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                 <span className="material-symbols-outlined text-red-600">currency_exchange</span>
               </div>
-              <span className="text-sm text-slate-500 dark:text-slate-400">환불</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">환불 완료</span>
             </div>
             <p className="text-2xl font-bold text-slate-900 dark:text-white">
               ₩{totalRefunded.toLocaleString()}
@@ -154,12 +192,12 @@ export default function PaymentHistoryPage() {
           </div>
         </div>
 
-        {/* Filter */}
         <div className="flex gap-2 mb-6">
           {[
             { key: 'all', label: '전체' },
             { key: 'paid', label: '결제완료' },
-            { key: 'cancelled', label: '환불' },
+            { key: 'refundRequested', label: '환불요청' },
+            { key: 'refunded', label: '환불완료' },
           ].map(({ key, label }) => (
             <button
               key={key}
@@ -175,11 +213,10 @@ export default function PaymentHistoryPage() {
           ))}
         </div>
 
-        {/* Payment List */}
         <div className="space-y-4">
           {filteredPayments.map((payment) => (
             <div
-              key={payment.id}
+              key={payment.paymentId}
               className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -195,7 +232,7 @@ export default function PaymentHistoryPage() {
                       {payment.tutorialTitle}
                     </h3>
                     <div className="flex items-center gap-3 mt-2 text-sm text-slate-500 dark:text-slate-400">
-                      <span>{payment.paymentMethod}</span>
+                      <span>{payment.mentorName}</span>
                       <span>·</span>
                       <span>{formatDate(payment.paidAt || payment.createdAt)}</span>
                     </div>
@@ -204,18 +241,33 @@ export default function PaymentHistoryPage() {
 
                 <div className="flex items-center gap-4 md:flex-col md:items-end">
                   <p className={`text-xl font-bold ${
-                    payment.status === 'CANCELLED'
+                    payment.status === 'REFUNDED' || payment.status === 'CANCELLED'
                       ? 'text-red-600 dark:text-red-400 line-through'
                       : 'text-primary'
                   }`}>
                     ₩{payment.amount.toLocaleString()}
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
+                    {payment.status === 'PAID' && (
+                      <button
+                        onClick={() => handleRefundRequest(payment.paymentId)}
+                        disabled={refundingId === payment.paymentId}
+                        className="text-xs text-red-600 hover:underline disabled:opacity-50"
+                      >
+                        {refundingId === payment.paymentId ? '환불 신청중...' : '환불 신청'}
+                      </button>
+                    )}
+                    {payment.status === 'REFUND_REQUESTED' && (
+                      <span className="text-xs text-slate-400">환불 요청중</span>
+                    )}
+                    {payment.status === 'REFUND_REJECTED' && (
+                      <span className="text-xs text-red-500">환불 거절</span>
+                    )}
                     <Link
                       to={`/tutorial/${payment.tutorialId}`}
                       className="text-xs text-primary hover:underline"
                     >
-                      상세보기
+                      튜토리얼 보기
                     </Link>
                   </div>
                 </div>
@@ -224,7 +276,6 @@ export default function PaymentHistoryPage() {
           ))}
         </div>
 
-        {/* Empty State */}
         {filteredPayments.length === 0 && (
           <div className="text-center py-16">
             <span className="material-symbols-outlined text-6xl text-slate-300 dark:text-slate-600 mb-4">
