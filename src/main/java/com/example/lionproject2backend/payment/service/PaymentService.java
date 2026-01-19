@@ -6,6 +6,7 @@ import com.example.lionproject2backend.payment.domain.Payment;
 import com.example.lionproject2backend.payment.domain.PaymentStatus;
 import com.example.lionproject2backend.payment.dto.*;
 import com.example.lionproject2backend.payment.infra.PortOneClient;
+import com.example.lionproject2backend.payment.service.RefundSseService;
 import com.example.lionproject2backend.payment.repository.PaymentRepository;
 import com.example.lionproject2backend.settlement.domain.SettlementDetail;
 import com.example.lionproject2backend.settlement.repository.SettlementDetailRepository;
@@ -41,6 +42,7 @@ public class PaymentService {
     private final UserRepository userRepository;
     private final SettlementService settlementService;
     private final SettlementDetailRepository settlementDetailRepository;
+    private final RefundSseService refundSseService;
     private static final int PLATFORM_FEE_PERCENT = 10; // 10%
 
 
@@ -211,6 +213,7 @@ public class PaymentService {
 
         ticket.validateRefund();
         payment.requestRefund();
+        refundSseService.notifyRefundUpdate();
 
         log.info("환불 신청 완료 - paymentId: {}, userId: {}", paymentId, userId);
     }
@@ -254,6 +257,7 @@ public class PaymentService {
         ticket.applyRefund();
 
         settlementService.recordRefundAdjustment(payment);
+        refundSseService.notifyRefundUpdate();
 
         log.info("환불 승인 및 처리 완료 - paymentId: {}, adminUserId: {}, refundAmount: {}",
                 paymentId, adminUserId, refundAmount);
@@ -272,6 +276,7 @@ public class PaymentService {
         validateAdminAuthority(adminUserId);
 
         payment.rejectRefund();
+        refundSseService.notifyRefundUpdate();
 
         log.info("환불 거절 완료 - paymentId: {}, adminUserId: {}", paymentId, adminUserId);
     }

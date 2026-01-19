@@ -41,9 +41,13 @@ public class PaymentCustomRepositoryImpl implements PaymentCustomRepository {
                         statusEq(status),
                         keywordContains(keyword)
                 )
-                .orderBy(payment.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
+                .orderBy(payment.createdAt.desc());
+
+        if (pageable.isPaged()) {
+            query = query
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize());
+        }
 
         // 전체 개수를 위한 카운트 쿼리
         JPAQuery<Long> countQuery = queryFactory

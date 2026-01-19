@@ -4,6 +4,7 @@ import com.example.lionproject2backend.global.response.ApiResponse;
 import com.example.lionproject2backend.payment.domain.PaymentStatus;
 import com.example.lionproject2backend.payment.dto.*;
 import com.example.lionproject2backend.payment.service.PaymentService;
+import com.example.lionproject2backend.payment.service.RefundSseService;
 import com.example.lionproject2backend.payment.config.PortOneProperties;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Slf4j
 @RestController
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class PayController {
     private final PortOneProperties portOneProperties;
     private final PaymentService paymentService;
+    private final RefundSseService refundSseService;
 
     @PostMapping("/tutorials/{tutorialId}/payments")
     public ResponseEntity<ApiResponse<PaymentCreateResponse>> createPayment(
@@ -167,6 +171,16 @@ public class PayController {
         List<GetPaymentListResponse> response = paymentService.getRefundRequestList(adminUserId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    /**
+     * 환불 요청 SSE 스트림 (관리자)
+     * GET /api/admin/payments/refund-requests/stream
+     */
+    @GetMapping(value = "/admin/payments/refund-requests/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamRefundRequests() {
+        return refundSseService.subscribe();
+    }
+
 
     /* 프론트에 결제창 띄울 때 id값들 가져가는 api */
     @GetMapping("/payments/config")
