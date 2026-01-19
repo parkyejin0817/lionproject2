@@ -70,7 +70,6 @@ function App() {
             <Route path="/payment/:tutorialId" element={<PaymentPage />} />
             <Route path="/payment/complete" element={<PaymentCompletePage />} />
             <Route path="/mypage/payments" element={<PaymentHistoryPage />} />
-            <Route path="/admin/refunds" element={<AdminRefundPage />} />
             <Route path="/admin" element={<AdminDashboardPage />}>
               <Route path="mentors" element={<MentorApprovalPage />} />
               <Route path="refunds" element={<AdminRefundPage />} />
