@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import * as tutorialApi from '@/api/tutorial';
 import type { Tutorial } from '@/api/tutorial';
 
@@ -14,6 +15,7 @@ type PortOneConfig = {
 export default function PaymentPage() {
   const { tutorialId } = useParams<{ tutorialId: string }>();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
 
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [isTutorialLoading, setIsTutorialLoading] = useState(true);
@@ -137,6 +139,12 @@ export default function PaymentPage() {
       return;
     }
 
+    if (!isAuthenticated || !user) {
+      alert('로그인 후 결제가 가능합니다.');
+      navigate('/login');
+      return;
+    }
+
     if (!tutorial) {
       alert('튜토리얼 정보를 불러오지 못했습니다.');
       return;
@@ -156,10 +164,12 @@ export default function PaymentPage() {
     setIsProcessing(true);
 
     try {
+      const token = localStorage.getItem('accessToken');
       const createRes = await fetch(`${API_BASE_URL}/api/tutorials/${resolvedTutorialId}/payments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           count: lessonCount,
@@ -194,9 +204,9 @@ export default function PaymentPage() {
         currency: 'CURRENCY_KRW',
         payMethod: getPayMethod() as 'CARD' | 'TRANSFER',
         customer: {
-          fullName: '사용자',
+          fullName: user.nickname || '사용자',
           phoneNumber: '010-0000-0000',
-          email: 'user@example.com',
+          email: user.email || 'user@example.com',
         },
         windowType: {
           pc: 'IFRAME',
@@ -213,6 +223,7 @@ export default function PaymentPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           impUid: response.paymentId,
