@@ -69,14 +69,20 @@ public class SettlementService {
         List<Settlement> settlements = new ArrayList<>();
 
         detailsByMentor.forEach((mentor, mentorDetails) -> {
+
             SettlementCalculation calc = SettlementCalculation.from(mentorDetails);
+            int settlementAmount = calc.getSettlementAmount();
+
+            int refundApplied =
+                    calculateRefundAmount(mentor, settlementPeriod, settlementAmount);
 
             Settlement settlement = Settlement.create(
                     mentor,
                     settlementPeriod,
                     calc.getTotalAmount(),
                     calc.getPlatformFee(),
-                    calc.getSettlementAmount()
+                    settlementAmount,
+                    refundApplied
             );
 
             settlementRepository.save(settlement);
@@ -106,7 +112,6 @@ public class SettlementService {
             throw new CustomException(ErrorCode.SETTLEMENT_ALREADY_COMPLETED);
         }
 
-        calculateFinalSettlementAmount(settlementId);
         settlement.complete();
 
         log.info("정산 지급 완료 처리. settlementId: {}, mentorId: {}, settlementAmount: {}",
@@ -187,6 +192,7 @@ public class SettlementService {
     @Transactional
     public void recordRefundAdjustment(Payment refundedPayment) {
 
+
         SettlementDetail detail = settlementDetailRepository
                 .findByPayment(refundedPayment)
                 .orElseThrow(() -> new CustomException(ErrorCode.SETTLEMENT_DETAIL_NOT_FOUND));
@@ -212,36 +218,31 @@ public class SettlementService {
         );
     }
 
-
-
-    @Transactional
-    public void calculateFinalSettlementAmount(Long settlementId) {
-        Settlement settlement = settlementRepository.findById(settlementId)
-                .orElseThrow(() -> new CustomException(ErrorCode.SETTLEMENT_NOT_FOUND));
-
-        YearMonth period = settlement.getSettlementPeriod();
-        Mentor mentor = settlement.getMentor();
-        mentor.getId();
-
+    private int calculateRefundAmount(
+            Mentor mentor,
+            YearMonth period,
+            int settlementAmount
+    ) {
         List<SettlementAdjustment> adjustments =
-                settlementAdjustmentRepository
-                        .findApplicableAdjustments(mentor, period);
+                settlementAdjustmentRepository.findApplicableAdjustments(mentor, period);
 
-        int remainingSettlementAmount = settlement.getSettlementAmount();
+        int remaining = settlementAmount;
+        int refundApplied = 0;
 
         for (SettlementAdjustment adj : adjustments) {
-            if (remainingSettlementAmount <= 0) break;
+            if (remaining <= 0) break;
 
             int remainAdjAmount = adj.getRemainingAmount();
             if (remainAdjAmount <= 0) continue;
 
-            int applied = Math.min(remainingSettlementAmount, remainAdjAmount);
+            int applied = Math.min(remaining, remainAdjAmount);
 
             adj.applyPartially(applied);
-            remainingSettlementAmount -= applied;
+            refundApplied += applied;
+            remaining -= applied;
         }
 
-        settlement.applyFinalAmount(remainingSettlementAmount);
+        return refundApplied;
     }
 
     @Transactional
@@ -251,7 +252,6 @@ public class SettlementService {
                 settlementRepository.findBySettlementPeriodAndStatus(period, SettlementStatus.PENDING);
 
         for (Settlement settlement : settlements) {
-            calculateFinalSettlementAmount(settlement.getId());
             settlement.complete();
         }
 
