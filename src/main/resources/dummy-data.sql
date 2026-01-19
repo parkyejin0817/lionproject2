@@ -85,7 +85,7 @@ VALUES
 -- 3. Mentors (멘토 정보)
 -- =====================================================
 -- 멘토 user_id는 21-25 (멘토1-5)
-INSERT INTO mentors (user_id, career, mentor_status, review_count, created_at, updated_at)
+INSERT INTO mentors (user_id, career, status, review_count, created_at, updated_at)
 VALUES (21, '네이버 5년, 카카오 3년, 현대자동차 2년 백엔드 개발 경력. Spring Boot, Java 전문가.', 'APPROVED', 0, NOW(), NOW()),
        (22, '구글 3년, 스타트업 4년 프론트엔드 개발 경력. React, Vue.js, TypeScript 전문가.', 'APPROVED', 0, NOW(), NOW()),
        (23, '마이크로소프트 2년, 네이버 4년 풀스택 개발 경력. Python Django, Node.js Express 전문가.', 'APPROVED', 0, NOW(), NOW()),
