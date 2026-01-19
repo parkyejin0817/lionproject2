@@ -49,9 +49,20 @@ public class Mentor extends BaseEntity {
     public Mentor(User user, String career) {
         this.user = user;
         this.career = career;
-        this.mentorStatus = MentorStatus.APPROVED;
+        this.mentorStatus = MentorStatus.PENDING;
         this.reviewCount = 0;
     }
+
+
+    // 멘토 승인
+    public void approve() {
+        this.mentorStatus = MentorStatus.APPROVED;
+    }
+
+    // 멘토 거절
+    public void reject(String reason) {
+        this.mentorStatus = MentorStatus.REJECTED;
+
 
     // =============== 가용 시간 관련 메서드 =============== //
 

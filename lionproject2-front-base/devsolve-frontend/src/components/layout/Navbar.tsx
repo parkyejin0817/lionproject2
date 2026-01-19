@@ -22,6 +22,17 @@ export default function Navbar({ onToggleDarkMode }: NavbarProps) {
     navigate('/');
   };
 
+    const getMyPagePath = () => {
+        if (user?.role === 'ADMIN') return '/admin';
+        if (user?.role === 'MENTOR') return '/mentor/dashboard';
+        return '/mypage';
+    };
+
+    const getMyPageLabel = () => {
+        if (user?.role === 'ADMIN') return '관리자';
+        return '마이페이지';
+    };
+
   return (
     <nav className="fixed top-0 w-full z-50 glass-nav border-b border-border bg-white/80 dark:bg-slate-900/90">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,8 +61,8 @@ export default function Navbar({ onToggleDarkMode }: NavbarProps) {
             >
               이용 방법
             </Link>
-            {/* MENTOR 역할이 아닌 사용자에게만 표시 */}
-            {user?.role !== 'MENTOR' && (
+            {/* MENTEE 에게만  표시 */}
+              {user?.role !== 'MENTOR' && user?.role !== 'ADMIN' && (
               <Link
                 to="/mentor/apply"
                 className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
@@ -96,9 +107,9 @@ export default function Navbar({ onToggleDarkMode }: NavbarProps) {
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link to={user?.role === 'MENTOR' ? '/mentor/dashboard' : '/mypage'}>
-                        마이페이지
-                      </Link>
+                        <Link to={getMyPagePath()}>
+                            {getMyPageLabel()}
+                        </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                       로그아웃
@@ -122,15 +133,15 @@ export default function Navbar({ onToggleDarkMode }: NavbarProps) {
                     {user?.email}
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link
-                      to={user?.role === 'MENTOR' ? '/mentor/dashboard' : '/mypage'}
-                      className="flex items-center gap-2"
-                    >
-                      <span className="material-symbols-outlined text-lg">dashboard</span>
-                      마이페이지
-                    </Link>
-                  </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link
+                            to={getMyPagePath()}
+                            className="flex items-center gap-2"
+                        >
+                            <span className="material-symbols-outlined text-lg">dashboard</span>
+                            {getMyPageLabel()}
+                        </Link>
+                    </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 text-destructive">
                     <span className="material-symbols-outlined text-lg">logout</span>

@@ -30,7 +30,7 @@ export interface UserInfo {
   id: number;
   email: string;
   nickname: string;
-  role: 'MENTEE' | 'MENTOR';
+  role: 'MENTEE' | 'MENTOR'| 'ADMIN';
 }
 
 // 프로필 수정 요청 타입

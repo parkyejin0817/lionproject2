@@ -4,6 +4,7 @@ import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import com.example.lionproject2backend.mentor.domain.Mentor;
 import com.example.lionproject2backend.mentor.domain.MentorSkill;
+import com.example.lionproject2backend.mentor.domain.MentorStatus;
 import com.example.lionproject2backend.mentor.dto.*;
 import com.example.lionproject2backend.mentor.repository.MentorRepository;
 import com.example.lionproject2backend.mentor.repository.MentorSkillRepository;
@@ -47,12 +48,10 @@ public class MentorService {
             throw new CustomException(ErrorCode.ALREADY_MENTOR);
         }
 
-        // 멘토 생성 (APPROVED)
+        // 멘토 생성 (PENDING)
         Mentor mentor = new Mentor(user, request.getCareer());
         Mentor savedMentor = mentorRepository.save(mentor);
 
-        // 사용자 역할을 MENTOR로 변경
-        user.promoteToMentor();
 
         // 스킬 등록 (없으면 생성/있으면 재사용)
         for (String skillName : request.getSkills()) {
@@ -63,14 +62,14 @@ public class MentorService {
             mentorSkillRepository.save(mentorSkill);
         }
 
-        return new PostMentorApplyResponse(savedMentor.getId(), "APPROVED");
+        return new PostMentorApplyResponse(savedMentor.getId(), "PENDING");
     }
 
     /**
      * 멘토 전체 조회
      */
     public List<GetMentorListResponse> getAllMentors() {
-        List<Mentor> mentors = mentorRepository.findAll();
+        List<Mentor> mentors = mentorRepository.findByMentorStatus(MentorStatus.APPROVED);
 
         return mentors.stream()
                 .map(mentor -> {
@@ -113,6 +112,10 @@ public class MentorService {
 
         Mentor mentor = mentorRepository.findById(mentorId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MENTOR_NOT_FOUND));
+
+        if (mentor.getMentorStatus() != MentorStatus.APPROVED) {
+            throw new CustomException(ErrorCode.MENTOR_NOT_FOUND);
+        }
 
         List<String> skills = mentorSkillRepository.findByMentorId(mentorId)
                 .stream()

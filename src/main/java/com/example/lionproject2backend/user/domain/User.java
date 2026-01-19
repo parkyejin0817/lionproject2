@@ -78,5 +78,12 @@ public class User extends BaseEntity{
     public void promoteToMentor() {
         this.userRole = UserRole.MENTOR;
     }
+
+
+    public void changeRole(UserRole role) {
+        this.userRole = role;
+    }
 }
+
+
 
