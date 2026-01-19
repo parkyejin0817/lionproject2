@@ -28,9 +28,6 @@ export default function QuestionDetailPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // 질문 작성자 여부 (현재는 mock으로 true, 나중에 실제 인증 상태로 변경)
-    const isQuestionAuthor = true;
-
     // API 호출
     useEffect(() => {
         const fetchQuestion = async () => {
@@ -57,15 +54,6 @@ export default function QuestionDetailPage() {
 
         fetchQuestion();
     }, [questionId]);
-
-    // 답변 채택 핸들러
-    const handleAcceptAnswer = (answerId: number) => {
-        setAnswers(prev => prev.map(a => ({
-            ...a,
-            isAccepted: a.id === answerId
-        })));
-        alert('답변을 채택했습니다!');
-    };
 
     if (isLoading) {
         return (
@@ -176,25 +164,6 @@ export default function QuestionDetailPage() {
                                                 <p className="font-bold">{answer.mentorNickname || '멘토'}</p>
                                                 <p className="text-xs text-muted-foreground">{formatDate(answer.createdAt)}</p>
                                             </div>
-                                        </div>
-                                        {/* 채택 상태 또는 채택 버튼 */}
-                                        <div className="flex items-center gap-2">
-                                            {answer.isAccepted ? (
-                                                <Badge className="bg-green-500">
-                                                    <span className="material-symbols-outlined text-sm mr-1">check</span>
-                                                    채택된 답변
-                                                </Badge>
-                                            ) : isQuestionAuthor && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => handleAcceptAnswer(answer.id)}
-                                                    className="text-green-600 border-green-600 hover:bg-green-50 dark:hover:bg-green-950"
-                                                >
-                                                    <span className="material-symbols-outlined text-sm mr-1">check_circle</span>
-                                                    채택하기
-                                                </Button>
-                                            )}
                                         </div>
                                     </div>
                                     <div className="p-6 prose dark:prose-invert max-w-none">
