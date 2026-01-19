@@ -1,12 +1,12 @@
 package com.example.lionproject2backend.payment.domain;
 
 import com.example.lionproject2backend.global.domain.BaseEntity;
+import com.example.lionproject2backend.global.exception.custom.CustomException;
+import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import com.example.lionproject2backend.tutorial.domain.Tutorial;
 import com.example.lionproject2backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 @Table(name = "payments")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Payment extends BaseEntity {
 
     @Id
@@ -51,7 +49,12 @@ public class Payment extends BaseEntity {
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
-    // 생성 메서드
+    @Column(name = "refunded_amount", nullable = false)
+    private Integer refundedAmount = 0;
+
+    @Column(name = "refunded_at")
+    private LocalDateTime refundedAt;
+
     public static Payment create(Tutorial tutorial, User mentee, int count) {
         Payment payment = new Payment();
         payment.tutorial = tutorial;
@@ -62,10 +65,9 @@ public class Payment extends BaseEntity {
         return payment;
     }
 
-    // 결제 완료 처리
     public void complete(String impUid, String merchantUid) {
         if (this.status != PaymentStatus.PENDING) {
-            throw new IllegalStateException("대기중인 결제만 완료할 수 있습니다");
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_COMPLETE);
         }
         this.impUid = impUid;
         this.merchantUid = merchantUid;
@@ -73,11 +75,47 @@ public class Payment extends BaseEntity {
         this.paidAt = LocalDateTime.now();
     }
 
-    // 결제 취소
     public void cancel() {
         if (this.status == PaymentStatus.PAID) {
-            throw new IllegalStateException("완료된 결제는 취소할 수 없습니다");
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_CANCEL);
         }
         this.status = PaymentStatus.CANCELLED;
+    }
+
+    public void requestRefund() {
+        if (this.status != PaymentStatus.PAID) {
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_REQUEST_REFUND);
+        }
+        this.status = PaymentStatus.REFUND_REQUESTED;
+    }
+
+    public void rejectRefund() {
+        if (this.status != PaymentStatus.REFUND_REQUESTED) {
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_REJECT_REFUND);
+        }
+        this.status = PaymentStatus.REFUND_REJECTED;
+    }
+
+    public void cancelRefundRequest() {
+        if (this.status != PaymentStatus.REFUND_REQUESTED) {
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_CANCEL_REFUND_REQUEST);
+        }
+        this.status = PaymentStatus.PAID;
+    }
+
+    public void validateRefund(int refundAmount) {
+        if (this.status != PaymentStatus.REFUND_REQUESTED) {
+            throw new CustomException(ErrorCode.PAYMENT_CANNOT_PROCESS_REFUND);
+        }
+
+        if (refundAmount != this.amount) {
+            throw new CustomException(ErrorCode.PAYMENT_INVALID_REFUND_AMOUNT);
+        }
+    }
+
+    public void applyRefund(int refundAmount) {
+        this.refundedAmount = refundAmount;
+        this.refundedAt = LocalDateTime.now();
+        this.status = PaymentStatus.REFUNDED;
     }
 }

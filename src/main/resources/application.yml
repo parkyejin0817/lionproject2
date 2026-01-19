@@ -1,6 +1,22 @@
-spring:
+﻿spring:
   application:
     name: lionproject2-backend
 
   profiles:
     active: local
+
+  threads:
+    virtual:
+      enabled: true
+
+portone:
+  store-id: "store-9f2484a4-da8a-46d7-a826-63e218708e5a"
+  channel-key: "channel-key-2eb6d695-708b-4f2e-aeb2-2dfa70ed3866"
+  api-secret: "YWW6IbcWlw7MMqIMBUeGWpMKFhCfF8SVHwPRZaiWrPnV7oMPBrQDfj1FeUKQtTcy9ynqUYPib4KmiPdU"
+
+payment:
+  inicis:
+    mid: "INIpaytest"
+    signkey: "SU5JTElURV9URVNUX1NJR05LRVk="
+    ini-api-key: "test"
+    ini-api-iv: "HYb3yQ4f65QL89=="

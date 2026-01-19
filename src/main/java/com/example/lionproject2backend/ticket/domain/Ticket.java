@@ -37,16 +37,12 @@ public class Ticket extends BaseEntity {
     @Column(name = "total_count", nullable = false)
     private int totalCount;
 
-//    @Enumerated(EnumType.STRING)
-//    private TicketStatus stauts;
-
     @Column(name = "remaining_count", nullable = false)
     private int remainingCount;
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
 
-    // 생성 메서드
     public static Ticket create(Payment payment, Tutorial tutorial, User mentee, int count) {
         Ticket ticket = new Ticket();
         ticket.payment = payment;
@@ -58,18 +54,16 @@ public class Ticket extends BaseEntity {
         return ticket;
     }
 
-    // 이용권 사용
     public void use() {
         if (this.remainingCount <= 0) {
             throw new IllegalStateException("남은 이용권이 없습니다");
         }
         if (isExpired()) {
-            throw new IllegalStateException("이용권이 만료되었습니다");
+            throw new IllegalStateException("이용권이 만료되었습니다.");
         }
         this.remainingCount--;
     }
 
-    // 이용권 복구 (거절 시)
     public void restore() {
         if (this.remainingCount >= this.totalCount) {
             throw new IllegalStateException("복구할 수 없습니다");
@@ -83,5 +77,34 @@ public class Ticket extends BaseEntity {
 
     public boolean hasRemaining() {
         return this.remainingCount > 0 && !isExpired();
+    }
+
+    public boolean hasBeenUsed() {
+        return this.remainingCount < this.totalCount;
+    }
+
+    public void validateRefund() {
+        if (hasBeenUsed()) {
+            throw new IllegalStateException("한 번이라도 사용된 티켓은 환불할 수 없습니다");
+        }
+        if (isExpired()) {
+            throw new IllegalStateException("만료된 이용권은 환불할 수 없습니다");
+        }
+        if (this.remainingCount <= 0) {
+            throw new IllegalStateException("환불 가능한 티켓이 없습니다");
+        }
+    }
+
+    public int calculateRefundAmount() {
+        return this.payment.getAmount();
+    }
+
+    public void applyRefund() {
+        this.remainingCount = 0;
+    }
+
+    public void invalidate() {
+        this.remainingCount = 0;
+        this.expiredAt = LocalDateTime.now();
     }
 }

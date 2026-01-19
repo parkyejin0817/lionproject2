@@ -1,13 +1,13 @@
 -- ============================================================
 -- DevSolve Database Schema
--- 멘토-멘티 매칭 과외 플랫폼
+-- 멘토-멘티 매칭 과외 ?�랫??
 -- ============================================================
 
--- 문자셋 설정
+-- 문자???�정
 SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
 
--- 기존 테이블 삭제 (의존성 역순)
+-- 기존 ?�이�???�� (?�존????��)
 DROP TABLE IF EXISTS `answers`;
 DROP TABLE IF EXISTS `questions`;
 DROP TABLE IF EXISTS `reviews`;
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `refresh_token_storage`;
 DROP TABLE IF EXISTS `users`;
 
 -- ============================================================
--- 1. users (사용자)
+-- 1. users (?�용??
 -- ============================================================
 CREATE TABLE `users` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -40,7 +40,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 2. refresh_token_storage (리프레시 토큰)
+-- 2. refresh_token_storage (리프?�시 ?�큰)
 -- ============================================================
 CREATE TABLE `refresh_token_storage` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -54,7 +54,7 @@ CREATE TABLE `refresh_token_storage` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 3. skills (스킬 마스터)
+-- 3. skills (?�킬 마스??
 -- ============================================================
 CREATE TABLE `skills` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -71,7 +71,7 @@ CREATE TABLE `skills` (
 CREATE TABLE `mentors` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
-  `career` TEXT COMMENT '경력 사항',
+  `career` TEXT COMMENT '경력 ?�항',
   `status` VARCHAR(20) NOT NULL DEFAULT 'APPROVED' COMMENT 'APPROVED',
   `review_count` INT NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -82,7 +82,7 @@ CREATE TABLE `mentors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 5. mentor_skills (멘토-스킬 매핑)
+-- 5. mentor_skills (멘토-?�킬 매핑)
 -- ============================================================
 CREATE TABLE `mentor_skills` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -106,9 +106,9 @@ CREATE TABLE `tutorials` (
   `mentor_id` BIGINT NOT NULL,
   `title` VARCHAR(200) NOT NULL,
   `description` TEXT,
-  `price` INT NOT NULL COMMENT '1회 수업 가격',
-  `duration` INT NOT NULL COMMENT '수업 시간(분)',
-  `rating` DECIMAL(3,2) NOT NULL DEFAULT 0.00 COMMENT '평균 평점',
+  `price` INT NOT NULL COMMENT '1???�업 가�?,
+  `duration` INT NOT NULL COMMENT '?�업 ?�간(�?',
+  `rating` DECIMAL(3,2) NOT NULL DEFAULT 0.00 COMMENT '?�균 ?�점',
   `status` VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' COMMENT 'ACTIVE, INACTIVE, PENDING, DELETED',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -119,7 +119,7 @@ CREATE TABLE `tutorials` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 7. tutorial_skills (과외-스킬 매핑)
+-- 7. tutorial_skills (과외-?�킬 매핑)
 -- ============================================================
 CREATE TABLE `tutorial_skills` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -145,9 +145,9 @@ CREATE TABLE `payments` (
   `imp_uid` VARCHAR(100) COMMENT 'PortOne 결제 고유 ID',
   `merchant_uid` VARCHAR(100) COMMENT '가맹점 주문 ID',
   `amount` INT NOT NULL COMMENT '결제 금액',
-  `count` INT NOT NULL COMMENT '구매 횟수 (이용권 개수)',
+  `count` INT NOT NULL COMMENT '구매 ?�수 (?�용�?개수)',
   `status` VARCHAR(20) NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING, PAID, CANCELLED, REFUNDED',
-  `paid_at` TIMESTAMP NULL COMMENT '결제 완료 시간',
+  `paid_at` TIMESTAMP NULL COMMENT '결제 ?�료 ?�간',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -160,16 +160,16 @@ CREATE TABLE `payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 9. tickets (이용권)
+-- 9. tickets (?�용�?
 -- ============================================================
 CREATE TABLE `tickets` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `payment_id` BIGINT NOT NULL,
   `tutorial_id` BIGINT NOT NULL,
   `mentee_id` BIGINT NOT NULL,
-  `total_count` INT NOT NULL COMMENT '총 구매 횟수',
-  `remaining_count` INT NOT NULL COMMENT '남은 횟수',
-  `expired_at` TIMESTAMP NULL COMMENT '유효기간 (기본: 구매일 +6개월)',
+  `total_count` INT NOT NULL COMMENT '�?구매 ?�수',
+  `remaining_count` INT NOT NULL COMMENT '?��? ?�수',
+  `expired_at` TIMESTAMP NULL COMMENT '?�효기간 (기본: 구매??+6개월)',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -183,16 +183,16 @@ CREATE TABLE `tickets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 10. lessons (수업)
+-- 10. lessons (?�업)
 -- ============================================================
 CREATE TABLE `lessons` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `ticket_id` BIGINT NOT NULL,
   `status` VARCHAR(20) NOT NULL DEFAULT 'REQUESTED' COMMENT 'REQUESTED, CONFIRMED, REJECTED, SCHEDULED, COMPLETED, CANCELLED',
-  `request_message` TEXT COMMENT '수업 신청 메시지',
-  `reject_reason` TEXT COMMENT '거절 사유',
-  `scheduled_at` TIMESTAMP NOT NULL COMMENT '수업 예정 시간',
-  `completed_at` TIMESTAMP NULL COMMENT '수업 완료 시간',
+  `request_message` TEXT COMMENT '?�업 ?�청 메시지',
+  `reject_reason` TEXT COMMENT '거절 ?�유',
+  `scheduled_at` TIMESTAMP NOT NULL COMMENT '?�업 ?�정 ?�간',
+  `completed_at` TIMESTAMP NULL COMMENT '?�업 ?�료 ?�간',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -210,12 +210,12 @@ CREATE TABLE `reviews` (
   `tutorial_id` BIGINT NOT NULL,
   `mentee_id` BIGINT NOT NULL,
   `mentor_id` BIGINT NOT NULL,
-  `rating` INT NOT NULL COMMENT '평점 (1-5)',
-  `content` TEXT NOT NULL COMMENT '리뷰 내용',
+  `rating` INT NOT NULL COMMENT '?�점 (1-5)',
+  `content` TEXT NOT NULL COMMENT '리뷰 ?�용',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  UNIQUE KEY `uk_review_mentee_tutorial` (`mentee_id`, `tutorial_id`) COMMENT '멘티당 과외당 1개 리뷰',
+  UNIQUE KEY `uk_review_mentee_tutorial` (`mentee_id`, `tutorial_id`) COMMENT '멘티??과외??1�?리뷰',
   INDEX `idx_reviews_tutorial` (`tutorial_id`),
   INDEX `idx_reviews_mentee` (`mentee_id`),
   INDEX `idx_reviews_mentor` (`mentor_id`),
@@ -230,9 +230,9 @@ CREATE TABLE `reviews` (
 CREATE TABLE `questions` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `lesson_id` BIGINT NOT NULL,
-  `title` VARCHAR(200) NOT NULL COMMENT '질문 제목',
-  `content` TEXT NOT NULL COMMENT '질문 내용',
-  `code_content` TEXT COMMENT '코드 스니펫',
+  `title` VARCHAR(200) NOT NULL COMMENT '질문 ?�목',
+  `content` TEXT NOT NULL COMMENT '질문 ?�용',
+  `code_content` TEXT COMMENT '코드 ?�니??,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -241,12 +241,12 @@ CREATE TABLE `questions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 13. answers (답변)
+-- 13. answers (?��?)
 -- ============================================================
 CREATE TABLE `answers` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `question_id` BIGINT NOT NULL,
-  `content` TEXT NOT NULL COMMENT '답변 내용',
+  `content` TEXT NOT NULL COMMENT '?��? ?�용',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -255,17 +255,3 @@ CREATE TABLE `answers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 초기 데이터 (스킬)
--- ============================================================
-INSERT INTO `skills` (`skill_name`) VALUES
-  ('Java'),
-  ('Spring Boot'),
-  ('JPA'),
-  ('MySQL'),
-  ('React'),
-  ('TypeScript'),
-  ('Python'),
-  ('Docker'),
-  ('AWS'),
-  ('Kubernetes');
-
