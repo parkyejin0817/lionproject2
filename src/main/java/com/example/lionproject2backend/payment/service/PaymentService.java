@@ -2,6 +2,8 @@ package com.example.lionproject2backend.payment.service;
 
 import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
+import com.example.lionproject2backend.lesson.domain.LessonStatus;
+import com.example.lionproject2backend.lesson.repository.LessonRepository;
 import com.example.lionproject2backend.payment.domain.Payment;
 import com.example.lionproject2backend.payment.domain.PaymentStatus;
 import com.example.lionproject2backend.payment.dto.*;
@@ -38,6 +40,7 @@ public class PaymentService {
     private final PortOneClient portOneClient;
     private final PaymentRepository paymentRepository;
     private final TicketRepository ticketRepository;
+    private final LessonRepository lessonRepository;
     private final TutorialRepository tutorialRepository;
     private final UserRepository userRepository;
     private final SettlementService settlementService;
@@ -239,22 +242,14 @@ public class PaymentService {
 
         payment.validateRefund(refundAmount);
 
-        // PortOne 환불 API 호출 (실제 환불 처리)
-        /**
-         * 환불 구현 필요
-         * 환불 실패 시 커스텀 에러 발생하도록 !
-         */
-
         if (payment.getImpUid() == null) {
             throw new CustomException(ErrorCode.PAYMENT_CANNOT_PROCESS_REFUND);
         }
 
         portOneClient.cancelPayment(payment.getImpUid(), "관리자 승인 환불");
         payment.applyRefund(refundAmount);
-        /**
-         * 티켓 상태 변경?
-         */
-        ticket.applyRefund();
+
+        invalidateTicket(ticket.getId());
 
         settlementService.recordRefundAdjustment(payment);
         refundSseService.notifyRefundUpdate();
@@ -341,5 +336,18 @@ public class PaymentService {
         if (!payment.getMentee().getId().equals(userId)) {
             throw new CustomException(ErrorCode.PAYMENT_FORBIDDEN);
         }
+    }
+
+    @Transactional
+    public void invalidateTicket(Long ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow();
+
+        ticket.invalidate();
+
+        lessonRepository.cancelAllByTicketId(
+                ticketId,
+                LessonStatus.CANCELLED
+        );
     }
 }

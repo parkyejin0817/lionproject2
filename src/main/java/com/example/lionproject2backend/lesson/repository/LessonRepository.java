@@ -3,6 +3,7 @@ package com.example.lionproject2backend.lesson.repository;
 import com.example.lionproject2backend.lesson.domain.Lesson;
 import com.example.lionproject2backend.lesson.domain.LessonStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -163,4 +164,14 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             "JOIN FETCH tk.tutorial t " +
             "WHERE l.status = :status")
     List<Lesson> findByStatus(@Param("status") LessonStatus status);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update Lesson l "
+            + "set l.status = :status "
+            + "where l.ticket.id = :ticketId "
+            + "and l.status != 'COMPLETED' ")
+    int cancelAllByTicketId(
+            @Param("ticketId") Long ticketId,
+            @Param("status") LessonStatus status
+    );
 }

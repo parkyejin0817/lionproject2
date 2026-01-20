@@ -17,6 +17,8 @@ import com.example.lionproject2backend.settlement.dto.*;
 import com.example.lionproject2backend.settlement.repository.SettlementAdjustmentRepository;
 import com.example.lionproject2backend.settlement.repository.SettlementDetailRepository;
 import com.example.lionproject2backend.settlement.repository.SettlementRepository;
+import com.example.lionproject2backend.tutorial.domain.Tutorial;
+import com.example.lionproject2backend.tutorial.repository.TutorialRepository;
 import com.example.lionproject2backend.user.domain.User;
 import com.example.lionproject2backend.user.domain.UserRole;
 import com.example.lionproject2backend.user.repository.UserRepository;
@@ -45,6 +47,7 @@ public class SettlementService {
     private final SettlementAdjustmentRepository settlementAdjustmentRepository;
     private final MentorRepository mentorRepository;
     private final UserRepository userRepository;
+    private final TutorialRepository tutorialRepository;
 
     /**
      * 정산 생성 (특정 기간의 결제 내역 조회 후 멘토별로 정산 생성)
@@ -202,8 +205,12 @@ public class SettlementService {
         YearMonth targetPeriod =
                 YearMonth.from(refundedPayment.getPaidAt()).plusMonths(1);
 
+        Mentor mentor = detail.getPayment()
+                .getTutorial()
+                .getMentor();
+
         SettlementAdjustment adjustment = SettlementAdjustment.create(
-                refundedPayment.getTutorial().getMentor(),
+                mentor,
                 targetPeriod,
                 mentorRefundAmount,
                 AdjustmentType.REFUND

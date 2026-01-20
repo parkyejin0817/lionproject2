@@ -184,4 +184,11 @@ public class Lesson extends BaseEntity {
         this.status = LessonStatus.COMPLETED;
         this.completedAt = LocalDateTime.now();
     }
+
+    public void cancelLesson(){
+        if ((this.status == LessonStatus.CANCELLED) || (this.status == LessonStatus.COMPLETED)) {
+            return; // 상태가 맞지 않으면 무시
+        }
+        this.status = LessonStatus.CANCELLED;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.lionproject2backend.ticket.domain;
 
 import com.example.lionproject2backend.global.domain.BaseEntity;
+import com.example.lionproject2backend.lesson.domain.Lesson;
 import com.example.lionproject2backend.payment.domain.Payment;
 import com.example.lionproject2backend.tutorial.domain.Tutorial;
 import com.example.lionproject2backend.user.domain.User;
@@ -8,6 +9,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -97,10 +100,6 @@ public class Ticket extends BaseEntity {
 
     public int calculateRefundAmount() {
         return this.payment.getAmount();
-    }
-
-    public void applyRefund() {
-        this.remainingCount = 0;
     }
 
     public void invalidate() {
