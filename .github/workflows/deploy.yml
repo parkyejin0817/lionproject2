@@ -1,4 +1,4 @@
-name: Deploy to EC2 (Docker Hub)
+name: Deploy to EC2 (Docker Compose)
 
 on:
   push:
@@ -38,6 +38,15 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:${{ github.sha }}
 
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/home/ec2-user/app"
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -50,24 +59,20 @@ jobs:
           envs: DOCKERHUB_USERNAME
           script: |
             set -e
+            cd /home/ec2-user/app
 
             echo "🧹 Cleaning up old Docker resources..."
             docker system prune -af --volumes || true
 
-            echo "🛑 Stopping existing container..."
-            docker stop devsolve-backend || true
-            docker rm devsolve-backend || true
+            echo "🛑 Stopping existing containers..."
+            docker-compose down || true
 
             echo "📥 Pulling latest image..."
-            docker pull $DOCKERHUB_USERNAME/devsolve-backend:latest
+            export DOCKER_USERNAME=$DOCKERHUB_USERNAME
+            docker-compose pull
 
-            echo "🚀 Starting new container..."
-            docker run -d \
-              --name devsolve-backend \
-              --restart unless-stopped \
-              -p 8080:8080 \
-              --env-file /home/ec2-user/.env \
-              $DOCKERHUB_USERNAME/devsolve-backend:latest
+            echo "🚀 Starting containers..."
+            docker-compose up -d
 
             echo "⏳ Waiting for application to start..."
             sleep 15
@@ -80,7 +85,7 @@ jobs:
               fi
               if [ $i -eq 12 ]; then
                 echo "❌ Health check failed!"
-                docker logs devsolve-backend --tail 50
+                docker-compose logs --tail 50
                 exit 1
               fi
               echo "Attempt $i/12: Waiting..."
@@ -88,7 +93,7 @@ jobs:
             done
 
             echo "📊 Container Status:"
-            docker ps | grep devsolve
+            docker-compose ps
 
             echo "✅ Deployment complete!"
         env:
