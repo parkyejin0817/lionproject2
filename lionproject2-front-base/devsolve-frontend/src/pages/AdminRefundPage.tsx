@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import * as paymentApi from '@/api/payment';
 import type { PaymentStatus, RefundRequestItem } from '@/api/payment';
+import { API_BASE_URL } from '@/api/client';
 
 const PAGE_SIZE = 10;
-const API_BASE_URL = 'http://localhost:8080';
 
 function formatDate(dateString: string | null): string {
   if (!dateString) return '-';

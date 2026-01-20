@@ -91,6 +91,15 @@ export default function MenteeDashboardPage() {
     return tickets.map(ticket => {
       const ticketLessons = lessons.filter(l => l.ticketId === ticket.id);
       const completedCount = ticketLessons.filter(l => l.status === 'COMPLETED').length;
+
+      // 진행 중인 수업 상태 확인
+      const hasPendingLesson = ticketLessons.some(l => l.status === 'REQUESTED');
+      const hasConfirmedLesson = ticketLessons.some(l => ['CONFIRMED', 'SCHEDULED'].includes(l.status));
+
+      // 예약 가능 여부: 남은 횟수 있고, 진행 중인 수업 없음
+      const canBook = ticket.remainingCount > 0 && !hasPendingLesson && !hasConfirmedLesson;
+
+      // 기존 상태 계산 (stats용)
       const hasOngoing = ticketLessons.some(l => ['CONFIRMED', 'SCHEDULED', 'IN_PROGRESS'].includes(l.status));
       const hasWaiting = ticketLessons.some(l => l.status === 'REQUESTED');
 
@@ -106,6 +115,9 @@ export default function MenteeDashboardPage() {
         usedCount: ticket.totalCount - ticket.remainingCount,
         status,
         completedCount,
+        hasPendingLesson,
+        hasConfirmedLesson,
+        canBook,
       };
     });
   }, [tickets, lessons]);
@@ -292,12 +304,26 @@ export default function MenteeDashboardPage() {
                       </div>
                     </div>
                     <div>
-                      {course.status === 'ongoing' ? (
+                      {course.canBook ? (
                         <button
                           onClick={() => setReservationModal({ isOpen: true, ticket: course })}
                           className="px-4 py-2 bg-gradient-to-r from-primary to-blue-700 rounded-lg text-white text-xs font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
                         >
                           예약하기
+                        </button>
+                      ) : course.hasPendingLesson ? (
+                        <button
+                          disabled
+                          className="px-4 py-2 bg-amber-500/20 border border-amber-500/30 rounded-lg text-amber-500 text-xs font-medium cursor-not-allowed"
+                        >
+                          승인 대기
+                        </button>
+                      ) : course.hasConfirmedLesson ? (
+                        <button
+                          disabled
+                          className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-500 text-xs font-medium cursor-not-allowed"
+                        >
+                          수업 예정
                         </button>
                       ) : course.status === 'completed' ? (
                         <button

@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -50,6 +51,7 @@ public class Payment extends BaseEntity {
     private LocalDateTime paidAt;
 
     @Column(name = "refunded_amount", nullable = false)
+    @ColumnDefault("0")
     private Integer refundedAmount = 0;
 
     @Column(name = "refunded_at")

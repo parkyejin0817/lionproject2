@@ -37,14 +37,13 @@ public class Tutorial extends BaseEntity{
     private int duration;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private TutorialStatus tutorialStatus;
 
 
     @Column(precision = 3, scale = 2)
     private BigDecimal rating;
 
-    @Column(length = 20)
-    private String status = "ACTIVE";
 
     @OneToMany(mappedBy = "tutorial", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TutorialSkill> tutorialSkills = new ArrayList<>();

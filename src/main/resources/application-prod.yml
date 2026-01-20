@@ -1,3 +1,7 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework   # ALB의 X-Forwarded-* 헤더 신뢰
+
 spring:
   application:
     name: lionproject2-backend
@@ -7,7 +11,54 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: false
+
+  batch:
+    jdbc:
+      initialize-schema: never
+
+portone:
+  store-id: ${PORTONE_STORE_ID}
+  channel-key: ${PORTONE_CHANNEL_KEY}
+  api-secret: ${PORTONE_API_SECRET}
+
+payment:
+  inicis:
+    mid: ${INICIS_MID}
+    signkey: ${INICIS_SIGNKEY}
+    ini-api-key: ${INICIS_API_KEY}
+    ini-api-iv: ${INICIS_API_IV}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-exp-ms: 1800000     # 30분
+  refresh-exp-ms: 604800000  # 7일
+
+app:
+  cookie:
+    refresh-name: "refreshToken"
+    refresh-path: "/"
+    refresh-same-site: "None"   # cross-origin 필수
+    refresh-secure: true        # HTTPS 필수
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://localhost:5173}
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN
+
+# ALB Health Check용 Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

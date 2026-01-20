@@ -1,0 +1,11 @@
+.git
+.gitignore
+*.md
+build/
+.gradle/
+.idea/
+*.iml
+lionproject2-front-base/
+start.sh
+app.log
+.env

@@ -1,11 +1,9 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import * as tutorialApi from '@/api/tutorial';
 import type { Tutorial } from '@/api/tutorial';
-
-// 배포시 주소 하드코딩
-const API_BASE_URL = 'http://localhost:8080';
+import { API_BASE_URL } from '@/api/client';
 
 type PortOneConfig = {
   storeId: string;

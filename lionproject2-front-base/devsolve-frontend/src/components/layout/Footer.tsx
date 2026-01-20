@@ -45,19 +45,14 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-primary transition-colors">
+              <Link to="/how-it-works" className="hover:text-primary transition-colors">
                 이용 가이드
-              </a>
+              </Link>
             </li>
             <li>
               <Link to="/qna" className="hover:text-primary transition-colors">
                 실시간 커뮤니티
               </Link>
-            </li>
-            <li>
-              <a href="#" className="hover:text-primary transition-colors">
-                기업 솔루션
-              </a>
             </li>
           </ul>
         </div>

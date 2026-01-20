@@ -8,9 +8,11 @@ import com.example.lionproject2backend.global.security.handler.JwtAuthentication
 import com.example.lionproject2backend.global.security.jwt.JwtProperties;
 import com.example.lionproject2backend.global.security.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +43,9 @@ public class SecurityConfig {
     @Autowired(required = false)
     private LocalBypassFilter localBypassFilter;
 
+    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:5174,http://localhost:5175}")
+    private String allowedOrigins;
+
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(jwtUtil, objectMapper);
@@ -66,7 +71,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/signup",
                                 "/api/auth/login",
-                                "/api/auth/refresh"
+                                "/api/auth/refresh",
+                                "/actuator/health"  // ALB Health Check
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/mentors",
@@ -112,12 +118,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOriginPatterns(List.of(
-                "http://localhost:3000",
-                "http://localhost:5173",
-                "http://localhost:5174",
-                "http://localhost:5175"
-        ));
+        config.setAllowedOriginPatterns(Arrays.asList(allowedOrigins.split(",")));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of(
                 "Authorization",

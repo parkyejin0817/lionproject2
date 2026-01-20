@@ -72,6 +72,7 @@ public class TutorialService {
     /**
      * 튜토리얼 검색
      * - 조건 없을 시 전체 조회
+     * - keyword: 제목, 설명, 스킬 이름에서 OR 검색
      * - 스킬 필터: AND 조건 (모든 스킬 보유한 튜토리얼만)
      * - 정렬: rating, reviewCount는 메모리 정렬
      */
@@ -79,14 +80,14 @@ public class TutorialService {
     @Transactional(readOnly = true)
     public List<GetTutorialResponse> searchTutorials(
             List<String> skills,
-            String title,
+            String keyword,
             Integer minPrice,
             Integer maxPrice,
             String sortBy
     ) {
-        // 1. QueryDSL로 검색 (스킬, 제목, 가격 필터링)
+        // 1. QueryDSL로 검색 (스킬, 키워드, 가격 필터링)
         List<Tutorial> tutorials = tutorialRepository.searchTutorials(
-                skills, title, minPrice, maxPrice, sortBy
+                skills, keyword, minPrice, maxPrice, sortBy
         );
 
         // 2. rating, reviewCount 정렬은 메모리에서 처리

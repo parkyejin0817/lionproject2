@@ -24,9 +24,9 @@ export default function HomePage() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      navigate(`/mentors?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/tutorials?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate('/mentors');
+      navigate('/tutorials');
     }
   };
 
@@ -82,7 +82,7 @@ export default function HomePage() {
               {popularKeywords.map((keyword) => (
                 <Link
                   key={keyword}
-                  to={`/mentors?q=${keyword}`}
+                  to={`/tutorials?q=${encodeURIComponent(keyword)}`}
                   className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full hover:bg-primary/10 hover:text-primary transition-colors border border-transparent hover:border-primary/30"
                 >
                   {keyword}

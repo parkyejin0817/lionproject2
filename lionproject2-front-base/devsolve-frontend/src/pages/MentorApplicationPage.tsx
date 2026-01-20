@@ -183,9 +183,7 @@ export default function MentorApplicationPage() {
 
           try {
             await Promise.all(availabilityPromises);
-            console.log("가용 시간 등록 완료");
-          } catch (availError) {
-            console.error("가용 시간 등록 중 오류:", availError);
+          } catch {
             // 가용 시간 등록 실패해도 멘토 신청은 완료됨
           }
         }
@@ -196,7 +194,6 @@ export default function MentorApplicationPage() {
         alert(response.message || "멘토 신청에 실패했습니다.");
       }
     } catch (error: unknown) {
-      console.error("Mentor application error:", error);
       const errorMessage = error instanceof Error ? error.message : "멘토 신청 중 오류가 발생했습니다.";
       alert(errorMessage);
     } finally {

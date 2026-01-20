@@ -36,13 +36,13 @@ public class TutorialController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<GetTutorialResponse>>> getAllTutorials(
             @RequestParam(required = false) List<String> skills,
-            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice,
             @RequestParam(required = false) String sortBy
     ) {
         List<GetTutorialResponse> tutorials = tutorialService.searchTutorials(
-                skills, title, minPrice, maxPrice, sortBy
+                skills, keyword, minPrice, maxPrice, sortBy
         );
         return ResponseEntity.ok(ApiResponse.success(tutorials));
     }

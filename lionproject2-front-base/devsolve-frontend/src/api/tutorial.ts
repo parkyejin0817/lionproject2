@@ -44,7 +44,7 @@ export interface TutorialUpdateRequest {
  */
 export const getTutorials = async (params?: {
     skills?: string[];      // 기술 스택 필터 (AND 조건)
-    title?: string;         // 제목 검색
+    keyword?: string;       // 키워드 검색 (제목, 설명, 스킬 이름)
     minPrice?: number;      // 최소 가격
     maxPrice?: number;      // 최대 가격
     sortBy?: string;        // 정렬 (priceAsc, priceDesc, rating, reviewCount)
@@ -54,7 +54,7 @@ export const getTutorials = async (params?: {
     if (params?.skills && params.skills.length > 0) {
         params.skills.forEach(skill => queryParams.append('skills', skill));
     }
-    if (params?.title) queryParams.append('title', params.title);
+    if (params?.keyword) queryParams.append('keyword', params.keyword);
     if (params?.minPrice !== undefined) queryParams.append('minPrice', String(params.minPrice));
     if (params?.maxPrice !== undefined) queryParams.append('maxPrice', String(params.maxPrice));
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy);

@@ -10,13 +10,13 @@
       enabled: true
 
 portone:
-  store-id: "store-9f2484a4-da8a-46d7-a826-63e218708e5a"
-  channel-key: "channel-key-2eb6d695-708b-4f2e-aeb2-2dfa70ed3866"
-  api-secret: "YWW6IbcWlw7MMqIMBUeGWpMKFhCfF8SVHwPRZaiWrPnV7oMPBrQDfj1FeUKQtTcy9ynqUYPib4KmiPdU"
+  store-id: ${PORTONE_STORE_ID}
+  channel-key: ${PORTONE_CHANNEL_KEY}
+  api-secret: ${PORTONE_API_SECRET}
 
 payment:
   inicis:
-    mid: "INIpaytest"
-    signkey: "SU5JTElURV9URVNUX1NJR05LRVk="
-    ini-api-key: "test"
-    ini-api-iv: "HYb3yQ4f65QL89=="
+    mid: ${INICIS_MID:INIpaytest}
+    signkey: ${INICIS_SIGNKEY:SU5JTElURV9URVNUX1NJR05LRVk=}
+    ini-api-key: ${INICIS_API_KEY:test}
+    ini-api-iv: ${INICIS_API_IV:HYb3yQ4f65QL89==}

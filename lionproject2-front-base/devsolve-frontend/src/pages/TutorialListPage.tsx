@@ -12,18 +12,25 @@ export default function TutorialListPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Filter state
-    const [selectedSkills, setSelectedSkills] = useState<string[]>([]);  // ⭐ 스킬 이름으로 변경
-    const [searchKeyword, setSearchKeyword] = useState('');
-    const [sortBy, setSortBy] = useState('');  // ⭐ 백엔드 sortBy 값 사용
-
-    // URL 쿼리 파라미터에서 검색어 읽기
-    useEffect(() => {
+    // URL에서 초기 검색어 읽기
+    const getInitialKeyword = () => {
         const q = searchParams.get('q');
         if (q) {
-            const cleanQuery = q.startsWith('#') ? q.substring(1) : q;
-            setSearchKeyword(cleanQuery);
+            return q.startsWith('#') ? q.substring(1) : q;
         }
+        return '';
+    };
+
+    // Filter state - URL 파라미터로 초기화
+    const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+    const [searchKeyword, setSearchKeyword] = useState(getInitialKeyword);
+    const [sortBy, setSortBy] = useState('');
+
+    // URL 쿼리 파라미터 변경 시 검색어 업데이트
+    useEffect(() => {
+        const q = searchParams.get('q');
+        const cleanQuery = q ? (q.startsWith('#') ? q.substring(1) : q) : '';
+        setSearchKeyword(cleanQuery);
     }, [searchParams]);
 
     // 스킬 목록 조회
@@ -49,7 +56,7 @@ export default function TutorialListPage() {
             try {
                 const response = await tutorialApi.getTutorials({
                     skills: selectedSkills.length > 0 ? selectedSkills : undefined,
-                    title: searchKeyword || undefined,
+                    keyword: searchKeyword || undefined,
                     sortBy: sortBy || undefined,
                 });
                 if (response.success && response.data) {

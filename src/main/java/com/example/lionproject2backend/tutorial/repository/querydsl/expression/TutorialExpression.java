@@ -35,6 +35,33 @@ public class TutorialExpression {
     }
 
     /**
+     * 키워드 검색 (제목, 설명, 스킬 이름에서 OR 검색)
+     */
+    public static BooleanExpression keywordContains(String keyword) {
+        if (!StringUtils.hasText(keyword)) {
+            return null;
+        }
+
+        QTutorialSkill subTutorialSkill = new QTutorialSkill("keywordTutorialSkill");
+        QSkill subSkill = new QSkill("keywordSkill");
+
+        // 제목 또는 설명에 키워드 포함
+        BooleanExpression titleMatch = tutorial.title.containsIgnoreCase(keyword);
+        BooleanExpression descMatch = tutorial.description.containsIgnoreCase(keyword);
+
+        // 스킬 이름에 키워드 포함하는 튜토리얼 (서브쿼리)
+        BooleanExpression skillMatch = tutorial.id.in(
+                JPAExpressions
+                        .select(subTutorialSkill.tutorial.id)
+                        .from(subTutorialSkill)
+                        .join(subTutorialSkill.skill, subSkill)
+                        .where(subSkill.skillName.containsIgnoreCase(keyword))
+        );
+
+        return titleMatch.or(descMatch).or(skillMatch);
+    }
+
+    /**
      * 기술 스택 필터링 (AND 조건)
      * 요청한 모든 기술을 보유한 튜토리얼만 조회
      */

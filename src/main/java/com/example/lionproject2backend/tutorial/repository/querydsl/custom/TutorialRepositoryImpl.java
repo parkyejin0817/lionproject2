@@ -21,7 +21,7 @@ public class TutorialRepositoryImpl implements TutorialRepositoryCustom {
 
     public List<Tutorial> searchTutorials(
             List<String> skills,
-            String title,
+            String keyword,
             Integer minPrice,
             Integer maxPrice,
             String sortBy
@@ -32,7 +32,7 @@ public class TutorialRepositoryImpl implements TutorialRepositoryCustom {
                 .join(tutorial.mentor).fetchJoin()
                 .where(
                         TutorialExpression.statusEq(TutorialStatus.ACTIVE),
-                        TutorialExpression.titleContains(title),
+                        TutorialExpression.keywordContains(keyword),
                         TutorialExpression.skillIn(skills),
                         TutorialExpression.priceBetween(minPrice, maxPrice)
                 )
