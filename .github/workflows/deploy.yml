@@ -30,8 +30,39 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
+          envs: DB_URL,DB_USERNAME,DB_PASSWORD,JWT_SECRET,PORTONE_STORE_ID,PORTONE_CHANNEL_KEY,PORTONE_API_SECRET,INICIS_MID,INICIS_SIGNKEY,INICIS_API_KEY,INICIS_API_IV,CORS_ALLOWED_ORIGINS
           script: |
             cd /home/ec2-user/app
+
+            # Create .env file from GitHub Secrets
+            cat > .env << EOF
+            DB_URL=$DB_URL
+            DB_USERNAME=$DB_USERNAME
+            DB_PASSWORD=$DB_PASSWORD
+            JWT_SECRET=$JWT_SECRET
+            PORTONE_STORE_ID=$PORTONE_STORE_ID
+            PORTONE_CHANNEL_KEY=$PORTONE_CHANNEL_KEY
+            PORTONE_API_SECRET=$PORTONE_API_SECRET
+            INICIS_MID=$INICIS_MID
+            INICIS_SIGNKEY=$INICIS_SIGNKEY
+            INICIS_API_KEY=$INICIS_API_KEY
+            INICIS_API_IV=$INICIS_API_IV
+            CORS_ALLOWED_ORIGINS=$CORS_ALLOWED_ORIGINS
+            EOF
+
             docker-compose down || true
             docker-compose build --no-cache
             docker-compose up -d
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORTONE_STORE_ID: ${{ secrets.PORTONE_STORE_ID }}
+          PORTONE_CHANNEL_KEY: ${{ secrets.PORTONE_CHANNEL_KEY }}
+          PORTONE_API_SECRET: ${{ secrets.PORTONE_API_SECRET }}
+          INICIS_MID: ${{ secrets.INICIS_MID }}
+          INICIS_SIGNKEY: ${{ secrets.INICIS_SIGNKEY }}
+          INICIS_API_KEY: ${{ secrets.INICIS_API_KEY }}
+          INICIS_API_IV: ${{ secrets.INICIS_API_IV }}
+          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
