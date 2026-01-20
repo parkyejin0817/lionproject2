@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Optional<Ticket> findByPayment(Payment payment);
+
     // 멘티의 특정 과외 이용권 조회 (유효한 것만)
     @Query("SELECT t FROM Ticket t " +
            "WHERE t.mentee.id = :menteeId " +

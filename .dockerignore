@@ -2,6 +2,7 @@
 .gitignore
 *.md
 build/
+!build/libs/*.jar
 .gradle/
 .idea/
 *.iml
