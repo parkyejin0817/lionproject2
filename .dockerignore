@@ -1,7 +1,11 @@
 .git
 .gitignore
 *.md
-build/
+build/classes/
+build/generated/
+build/tmp/
+build/resources/
+build/reports/
 .gradle/
 .idea/
 *.iml
@@ -9,3 +13,9 @@ lionproject2-front-base/
 start.sh
 app.log
 .env
+src/
+gradle/
+gradlew
+gradlew.bat
+build.gradle
+settings.gradle
